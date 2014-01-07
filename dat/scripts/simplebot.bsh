@@ -1,0 +1,49 @@
+update( ) 
+{
+	for( planet: simulation.getPlanets() )
+	{			
+		if( simulation.isOwnedPlanet( planet ) == false )
+			continue;			
+		
+		if( simulation.isOwnedPlanet( planet ) &&
+			simulation.numberOfTrees( planet ) < 2 &&
+			simulation.numberOfFriendlyCreatures( planet ) >= 10 &&
+			simulation.numberOfEnemyCreatures( planet ) == 0 )
+		{
+			simulation.plantTree( planet );
+			continue;			
+		}
+		
+		
+		if( simulation.numberAvailableResources( planet ) == 0 || simulation.creatureLimitReached() || simulation.numberOfFriendlyCreatures( planet ) > 200 )
+		{
+			simulation.moveCreatures( planet, simulation.getNearestNeighbourToEnemy( planet ), simulation.numberOfFriendlyCreatures( planet ) );			
+			continue;
+		}
+		
+		if( simulation.numberOfFriendlyCreatures( planet ) != 0 )
+		{		
+			for( neighbour: simulation.getPlanetNeighbours(planet) )
+			{
+				if( ( simulation.isEnemyPlanet(neighbour) && simulation.numberOfEnemyCreatures( neighbour ) < simulation.numberOfFriendlyCreatures( planet ) )  ||
+					( simulation.isOwnedPlanet(neighbour) && simulation.numberOfEnemyCreatures( neighbour ) > 0 && simulation.numberOfEnemyCreatures( neighbour ) < simulation.numberOfFriendlyCreatures( planet ) ) )
+				{
+					simulation.moveCreatures( planet, neighbour, simulation.numberOfFriendlyCreatures( planet ) );
+					break;
+				}
+				
+				if( simulation.isFreePlanet( neighbour ) && simulation.numberOfMoveableCreatures( planet ) >= 25 && !simulation.hasCreatureMovingTo( planet, neighbour ) )
+				{
+					simulation.moveCreatures( planet, neighbour, simulation.numberOfFriendlyCreatures( planet )  * 0.25 );
+					break;					
+				}
+					
+				if( simulation.isOwnedPlanet( neighbour ) && simulation.numberOfTrees( neighbour ) == 0 && simulation.numberOfFriendlyCreatures( neighbour ) < 10 && simulation.numberOfFriendlyCreatures( neighbour )+simulation.numberOfMoveableCreatures( planet ) > 10 )
+				{
+					simulation.moveCreatures( planet, neighbour, 10 - simulation.numberOfFriendlyCreatures( neighbour ) );
+					break;					
+				}
+			}					
+		} 								
+	}
+}

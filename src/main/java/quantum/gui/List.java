@@ -13,9 +13,9 @@ package quantum.gui;
 
 import java.util.ArrayList;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.awt.GLCanvas;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.awt.GLCanvas;
 
 import quantum.gfx.Font;
 import quantum.utils.Timer;

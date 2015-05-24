@@ -14,7 +14,7 @@ package quantum.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.awt.GLCanvas;
+import com.jogamp.opengl.awt.GLCanvas;
 
 public class Container extends Widget {
 	private ArrayList<Widget> widgets = new ArrayList<Widget>();

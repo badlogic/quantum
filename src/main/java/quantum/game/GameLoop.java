@@ -11,7 +11,7 @@
 
 package quantum.game;
 
-import javax.media.opengl.awt.GLCanvas;
+import com.jogamp.opengl.awt.GLCanvas;
 
 import quantum.gfx.Renderer;
 import quantum.net.Client;

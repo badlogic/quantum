@@ -15,7 +15,7 @@ import java.io.DataInputStream;
 import java.io.EOFException;
 import java.util.zip.GZIPInputStream;
 
-import javax.media.opengl.awt.GLCanvas;
+import com.jogamp.opengl.awt.GLCanvas;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;

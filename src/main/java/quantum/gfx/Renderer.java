@@ -14,10 +14,10 @@ package quantum.gfx;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLContext;
-import javax.media.opengl.awt.GLCanvas;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.awt.GLCanvas;
 
 import quantum.game.Constants;
 import quantum.game.Creature;
@@ -33,7 +33,7 @@ import quantum.utils.FileManager;
 import quantum.utils.Log;
 import quantum.utils.Timer;
 
-import com.jogamp.opengl.util.awt.Screenshot;
+import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
 
 public class Renderer {
 	FrameBufferObject offscreen_fbo;
@@ -187,7 +187,8 @@ public class Renderer {
 			fbo.renderFullScreenQuad();
 			gl.glDisable(GL.GL_BLEND);
 			gl.glDepthMask(true);
-			BufferedImage img = Screenshot.readToBufferedImage(256, 256);
+			AWTGLReadBufferUtil screenshot = new AWTGLReadBufferUtil(canvas.getGLProfile(), false /* alpha */);
+			BufferedImage img = screenshot.readPixelsToBufferedImage(gl, 0, 0, 256, 256, true /* awtOrientation */);
 			screen_fbo.unbind();
 			return img;
 		} else {
@@ -200,7 +201,8 @@ public class Renderer {
 			renderPass(sim, null, canvas);
 			gl.glDepthMask(true);
 			GLContext.getCurrent().getGL().glViewport(old_dim[0], old_dim[1], old_dim[2], old_dim[3]);
-			BufferedImage img = Screenshot.readToBufferedImage(256, 256);
+			AWTGLReadBufferUtil screenshot = new AWTGLReadBufferUtil(canvas.getGLProfile(), false /* alpha */);
+			BufferedImage img = screenshot.readPixelsToBufferedImage(gl, 0, 0, 256, 256, true /* awtOrientation */);
 			gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 
 			return img;

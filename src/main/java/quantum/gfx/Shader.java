@@ -15,14 +15,14 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLContext;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLContext;
 
 public class Shader {
-	int program = -1;
-	int vertex_shader = -1;
-	int fragment_shader = -1;
+	long program = -1;
+	long vertex_shader = -1;
+	long fragment_shader = -1;
 
 	public Shader (InputStream vertex_shader, InputStream fragment_shader) throws Exception {
 		String vs_string = vertex_shader == null ? null : "";
@@ -85,7 +85,7 @@ public class Shader {
 		if (status[0] != GL.GL_TRUE) throw new Exception("glsl: error linking shader program, " + getInfoLog(this.program));
 	}
 
-	public String getInfoLog (int object) {
+	public String getInfoLog (long object) {
 		String text = "";
 		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 

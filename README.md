@@ -2,6 +2,8 @@ Quantum
 =======
 ![screenshot](https://raw.github.com/yndi/quantum/master/screen.png "Game process")
 
+### [Download](http://libgdx.badlogicgames.com/downloads/quantum.zip)
+
 Quantum is a realtime strategy in the spirit of Galcon and Eufloria. You are in control of creatures that orbit planets. You can colonize new planets by moving creatures to them. To create new Creatures you have to build trees on the planets. The new born creatures will then inherit certain properties from their home planet. The goal of the game is it to eliminate all enemy creatures and overtake all their planets.
 
 The game was originally inspired by Dyson/Eufloria. I got in contact with the authors back then, offering to implement multiplayer. They politely refused and allowed me to write this clone with multiplayer.

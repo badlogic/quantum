@@ -14,8 +14,8 @@ package quantum.gfx;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
 
 /** a simple rgba color class. colors are given in the range [0,1].
  * 

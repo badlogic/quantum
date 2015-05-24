@@ -18,12 +18,12 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.awt.GLCanvas;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -218,7 +218,7 @@ public strictfp class Quantum extends JFrame implements GLEventListener {
 
 	public void display (GLAutoDrawable drawable) {
 		synchronized (drawable) {
-			drawable.getGL().glViewport(0,  0, drawable.getWidth(), drawable.getHeight());
+			drawable.getGL().glViewport(0,  0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
 			drawable.getGL().glClearColor(0, 0, 0, 1);
 			drawable.getGL().glClear(GL.GL_COLOR_BUFFER_BIT);
 

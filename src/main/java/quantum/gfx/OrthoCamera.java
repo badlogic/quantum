@@ -21,10 +21,10 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.HashSet;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLContext;
-import javax.media.opengl.awt.GLCanvas;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.awt.GLCanvas;
 
 import quantum.game.GameInterface;
 import quantum.math.Bounds;

@@ -15,13 +15,13 @@ import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.awt.GLCanvas;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 
 import quantum.game.Creature;
@@ -102,7 +102,7 @@ public class LocalTest extends JFrame implements GLEventListener {
 		}
 		renderer.render(sim, (GLCanvas)arg0);
 
-		ortho.setToOrtho2D(0, 0, arg0.getWidth(), arg0.getHeight());
+		ortho.setToOrtho2D(0, 0, arg0.getSurfaceWidth(), arg0.getSurfaceHeight());
 		GL2 gl = arg0.getGL().getGL2();
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadMatrixf(ortho.toFloatBuffer());
@@ -110,7 +110,7 @@ public class LocalTest extends JFrame implements GLEventListener {
 		gl.glLoadIdentity();
 		font.renderTextNewLine(
 			20,
-			arg0.getHeight() - 10,
+			arg0.getSurfaceHeight() - 10,
 			"fps: " + String.format("%.2f", renderer.getFramesPerSecond()) + "\n" + "simulation: "
 				+ String.format("%.2f", sim.getSimulationUpdateTime()) + " ms\n" + "rendering: "
 				+ String.format("%.2f", renderer.getRenderTime()) + " ms\n" + "trees: "

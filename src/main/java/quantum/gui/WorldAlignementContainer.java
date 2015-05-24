@@ -12,7 +12,8 @@
 package quantum.gui;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.OrthoCamera;
 import quantum.math.Vector2D;
@@ -51,7 +52,7 @@ public class WorldAlignementContainer extends Container {
 	}
 
 	public void render (GLCanvas canvas) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 		gl.glColor4f(bg_col.getR(), bg_col.getG(), bg_col.getB(), bg_col.getA());
 		renderQuad(pos.x, pos.y, width, height);
 		gl.glColor4f(border_col.getR(), border_col.getG(), border_col.getB(), border_col.getA());

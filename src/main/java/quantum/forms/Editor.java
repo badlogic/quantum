@@ -24,17 +24,17 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-
-import quantum.gfx.Color;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;
 import quantum.game.Constants;
 import quantum.game.Planet;
 import quantum.game.Simulation;
+import quantum.gfx.Color;
 import quantum.gfx.Renderer;
 import quantum.gui.Button;
 import quantum.gui.CheckBox;
@@ -361,7 +361,7 @@ public class Editor implements DisplayListener, MouseListener, MouseMotionListen
 	}
 
 	public void display (GLCanvas canvas) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
 		//
 		// render the simulation

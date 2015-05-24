@@ -15,7 +15,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Color;
 import quantum.math.Vector2D;
@@ -155,7 +156,7 @@ public strictfp class Creature extends Boid implements AliveGameObject {
 	}
 
 	public void render (GLCanvas canvas, boolean use_lod) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
 		float angle_rad = (float)Math.toRadians(angle);
 

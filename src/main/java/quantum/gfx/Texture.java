@@ -31,8 +31,10 @@ import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
 import javax.media.opengl.glu.GLU;
+import javax.media.opengl.glu.gl2.GLUgl2;
 
 import quantum.utils.Log;
 
@@ -203,7 +205,7 @@ public class Texture {
 		int texture_id = createTextureID();
 		Texture tex = new Texture(texture_id);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, texture_id);
-		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT, get2Fold(width), get2Fold(height), 0, GL.GL_DEPTH_COMPONENT,
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL2.GL_DEPTH_COMPONENT, get2Fold(width), get2Fold(height), 0, GL2.GL_DEPTH_COMPONENT,
 			GL.GL_UNSIGNED_BYTE, (ByteBuffer)null);
 		tex.texWidth = get2Fold(width);
 		tex.texHeight = get2Fold(height);
@@ -260,7 +262,7 @@ public class Texture {
 			srcPixelFormat = GL.GL_RGB;
 
 		ByteBuffer textureBuffer = convertImageData(bufferedImage, texture);
-		new GLU().gluBuild2DMipmaps(GL.GL_TEXTURE_2D, dstPixelFormat, get2Fold(bufferedImage.getWidth()),
+		new GLUgl2().gluBuild2DMipmaps(GL.GL_TEXTURE_2D, dstPixelFormat, get2Fold(bufferedImage.getWidth()),
 			get2Fold(bufferedImage.getHeight()), srcPixelFormat, GL.GL_UNSIGNED_BYTE, textureBuffer);
 		Log.println("[Texture] created texture " + bufferedImage.getWidth() + "x" + bufferedImage.getHeight());
 		texture_count++;

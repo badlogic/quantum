@@ -77,7 +77,6 @@ public class SinglePlayerMenu {
 			VerticalAlignement.TOP);
 		Image image;
 		try {
-			gui.getCanvas().getContext().makeCurrent();
 			image = new Image(gui, FileManager.readFile("quantum.png"));
 			cont.addWidget(new Spacer(gui, 0, 50));
 			cont.addWidget(image, HorizontalAlignement.CENTER);

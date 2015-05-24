@@ -14,9 +14,10 @@ package quantum.gfx;
 import java.nio.FloatBuffer;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
 
-import com.sun.opengl.util.BufferUtil;
+import com.jogamp.common.nio.Buffers;
 
 public class VertexArray {
 	boolean has_color = false;
@@ -30,9 +31,9 @@ public class VertexArray {
 	int tex_size;
 
 	public VertexArray (int capacity, int coord_size, int col_size, int tex_size) {
-		v_buf = BufferUtil.newFloatBuffer(coord_size * capacity);
-		c_buf = BufferUtil.newFloatBuffer(col_size * capacity);
-		t_buf = BufferUtil.newFloatBuffer(tex_size * capacity);
+		v_buf = Buffers.newDirectFloatBuffer(coord_size * capacity);
+		c_buf = Buffers.newDirectFloatBuffer(col_size * capacity);
+		t_buf = Buffers.newDirectFloatBuffer(tex_size * capacity);
 
 		if (col_size > 0) this.has_color = true;
 		if (tex_size > 0) this.has_tex = true;
@@ -92,13 +93,13 @@ public class VertexArray {
 	}
 
 	public void render (int shape, int vertices) {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 
-		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);
-		if (has_color) gl.glEnableClientState(GL.GL_COLOR_ARRAY);
+		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		if (has_color) gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
 		if (has_tex) {
 			gl.glClientActiveTexture(GL.GL_TEXTURE0);
-			gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+			gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
 		}
 
 		v_buf.rewind();
@@ -111,11 +112,11 @@ public class VertexArray {
 
 		gl.glDrawArrays(shape, 0, vertices);
 
-		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
-		if (has_color) gl.glDisableClientState(GL.GL_COLOR_ARRAY);
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		if (has_color) gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
 		if (has_tex) {
 			gl.glClientActiveTexture(GL.GL_TEXTURE0);
-			gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+			gl.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
 		}
 	}
 

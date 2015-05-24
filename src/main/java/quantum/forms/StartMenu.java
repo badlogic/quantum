@@ -15,7 +15,7 @@ import java.io.DataInputStream;
 import java.io.EOFException;
 import java.util.zip.GZIPInputStream;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;
@@ -52,7 +52,6 @@ public class StartMenu implements DisplayListener {
 
 		this.quantum = quantum;
 		quantum.addDisplayListener(this);
-		gui.getCanvas().getContext().makeCurrent();
 
 		renderer = new Renderer();
 		load("bggame.rec");
@@ -214,7 +213,7 @@ public class StartMenu implements DisplayListener {
 		cont.addWidget(replay, HorizontalAlignement.CENTER);
 		cont.addWidget(editor, HorizontalAlignement.CENTER);
 		cont.addWidget(maps, HorizontalAlignement.CENTER);
-		cont.addWidget(update, HorizontalAlignement.CENTER);
+//		cont.addWidget(update, HorizontalAlignement.CENTER);
 		cont.addWidget(exit, HorizontalAlignement.CENTER);
 // cont.addWidget( garbage_collect, HorizontalAlignement.CENTER );
 

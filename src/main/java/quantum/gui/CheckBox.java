@@ -14,7 +14,8 @@ package quantum.gui;
 import java.awt.event.KeyEvent;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Font;
 
@@ -85,9 +86,9 @@ public class CheckBox extends Widget {
 
 	@Override
 	public void render (GLCanvas canvas) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 		gl.glLineWidth(1.5f);
 
 		gl.glColor4f(border_col.getR(), border_col.getG(), border_col.getB(), border_col.getA());
@@ -116,7 +117,7 @@ public class CheckBox extends Widget {
 		}
 
 		gl.glLineWidth(1);
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 
 		gl.glColor4f(fg_col.getR(), fg_col.getG(), fg_col.getB(), fg_col.getA());
 		if (caption != null) font.renderText((int)(pos.x + 20), (int)(pos.y - 8 + font.getHeight() / 2), caption);

@@ -14,7 +14,8 @@ package quantum.gui;
 import java.util.ArrayList;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Font;
 import quantum.utils.Timer;
@@ -163,7 +164,7 @@ public class List extends Widget {
 
 	@Override
 	public void render (GLCanvas canvas) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
 		gui.getGL().glColor4f(bg_col.getR(), bg_col.getG(), bg_col.getB(), bg_col.getA());
 		renderQuad(pos.x, pos.y, width, height);
@@ -174,21 +175,21 @@ public class List extends Widget {
 		renderOutlinedQuad(pos.x + width - SCROLL_SIZE, pos.y, SCROLL_SIZE, SCROLL_SIZE);
 		renderOutlinedQuad(pos.x + width - SCROLL_SIZE, pos.y - height + SCROLL_SIZE, SCROLL_SIZE, SCROLL_SIZE);
 
-		if (!upper_hover) gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+		if (!upper_hover) gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 		gl.glBegin(GL.GL_TRIANGLES);
 		gl.glVertex2f(pos.x + width - SCROLL_SIZE, pos.y - SCROLL_SIZE);
 		gl.glVertex2f(pos.x + width, pos.y - SCROLL_SIZE);
 		gl.glVertex2f(pos.x + width - SCROLL_SIZE / 2, pos.y);
 		gl.glEnd();
-		if (!upper_hover) gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+		if (!upper_hover) gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 
-		if (!lower_hover) gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+		if (!lower_hover) gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 		gl.glBegin(GL.GL_TRIANGLES);
 		gl.glVertex2f(pos.x + width - SCROLL_SIZE, pos.y - height + SCROLL_SIZE);
 		gl.glVertex2f(pos.x + width, pos.y - height + SCROLL_SIZE);
 		gl.glVertex2f(pos.x + width - SCROLL_SIZE / 2, pos.y - height);
 		gl.glEnd();
-		if (!lower_hover) gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+		if (!lower_hover) gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 
 		gl.glColor4f(fg_col.getR(), fg_col.getG(), fg_col.getB(), fg_col.getA());
 		gui.enableScissor(pos.x, pos.y - height, width - SCROLL_SIZE, height - 1);

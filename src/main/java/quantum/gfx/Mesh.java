@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
 
-import com.sun.opengl.util.BufferUtil;
+import com.jogamp.common.nio.Buffers;
 
 import quantum.math.Bounds;
 import quantum.math.Matrix;
@@ -236,7 +237,7 @@ public class Mesh {
 	}
 
 	private FloatBuffer getBuffer (int a_floats) {
-		return BufferUtil.newFloatBuffer(a_floats);
+		return Buffers.newDirectFloatBuffer(a_floats);
 	}
 
 	protected void compileVertexArray () {
@@ -283,9 +284,9 @@ public class Mesh {
 	}
 
 	protected void compileDisplayList () {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 		gl_id = gl.glGenLists(1);
-		gl.glNewList(gl_id, GL.GL_COMPILE);
+		gl.glNewList(gl_id, GL2.GL_COMPILE);
 		gl.glBegin(GL.GL_TRIANGLES);
 
 		if (!has_normals && !has_colors && max_tex_units == 0)
@@ -315,12 +316,12 @@ public class Mesh {
 		texs = null;
 	}
 
-	protected void compileCoord (GL gl) {
+	protected void compileCoord (GL2 gl) {
 		for (Vector c : coords)
 			gl.glVertex3d(c.getX(), c.getY(), c.getZ());
 	}
 
-	protected void compileCoordCol (GL gl) {
+	protected void compileCoordCol (GL2 gl) {
 		for (int i = 0; i < coords.size(); i++) {
 			Color col = cols.get(i);
 			Vector coord = coords.get(i);
@@ -329,7 +330,7 @@ public class Mesh {
 		}
 	}
 
-	protected void compileCoordNor (GL gl) {
+	protected void compileCoordNor (GL2 gl) {
 		for (int i = 0; i < coords.size(); i++) {
 			Vector nor = nors.get(i);
 			Vector coord = coords.get(i);
@@ -338,7 +339,7 @@ public class Mesh {
 		}
 	}
 
-	protected void compileCoordColNor (GL gl) {
+	protected void compileCoordColNor (GL2 gl) {
 		for (int i = 0; i < coords.size(); i++) {
 			Color col = cols.get(i);
 			Vector nor = nors.get(i);
@@ -349,7 +350,7 @@ public class Mesh {
 		}
 	}
 
-	protected void compileCoordTex (GL gl) {
+	protected void compileCoordTex (GL2 gl) {
 		for (int i = 0; i < coords.size(); i++) {
 			for (int j = 0; j < max_tex_units; j++) {
 				Vector tex = texs.get(i * max_tex_units + j);
@@ -360,7 +361,7 @@ public class Mesh {
 		}
 	}
 
-	protected void compileCoordColTex (GL gl) {
+	protected void compileCoordColTex (GL2 gl) {
 		for (int i = 0; i < coords.size(); i++) {
 			for (int j = 0; j < max_tex_units; j++) {
 				Vector tex = texs.get(i * max_tex_units + j);
@@ -373,7 +374,7 @@ public class Mesh {
 		}
 	}
 
-	protected void compileCoordNorTex (GL gl) {
+	protected void compileCoordNorTex (GL2 gl) {
 		for (int i = 0; i < coords.size(); i++) {
 			for (int j = 0; j < max_tex_units; j++) {
 				Vector tex = texs.get(i * max_tex_units + j);
@@ -386,7 +387,7 @@ public class Mesh {
 		}
 	}
 
-	protected void compileCoordColNorTex (GL gl) {
+	protected void compileCoordColNorTex (GL2 gl) {
 		for (int i = 0; i < coords.size(); i++) {
 			for (int j = 0; j < max_tex_units; j++) {
 				Vector tex = texs.get(i * max_tex_units + j);
@@ -409,25 +410,25 @@ public class Mesh {
 
 	/** renders this mesh, no states are set */
 	public void render () {
-		if (type == Type.DISPLAY_LIST) GLContext.getCurrent().getGL().glCallList(gl_id);
+		if (type == Type.DISPLAY_LIST) GLContext.getCurrent().getGL().getGL2().glCallList(gl_id);
 		if (type == Type.VERTEX_ARRAY) renderVertexArray();
 	}
 
 	protected void renderVertexArray () {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 
-		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		va_coords.rewind();
 		gl.glVertexPointer(3, GL.GL_FLOAT, 0, va_coords);
 
 		if (has_colors) {
-			gl.glEnableClientState(GL.GL_COLOR_ARRAY);
+			gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
 			va_cols.rewind();
 			gl.glColorPointer(4, GL.GL_FLOAT, 0, va_cols);
 		}
 
 		if (has_normals) {
-			gl.glEnableClientState(GL.GL_NORMAL_ARRAY);
+			gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);
 			va_nors.rewind();
 			gl.glNormalPointer(GL.GL_FLOAT, 0, va_nors);
 		}
@@ -435,7 +436,7 @@ public class Mesh {
 		if (max_tex_units != 0) {
 			for (int i = 0; i < max_tex_units; i++) {
 				gl.glClientActiveTexture(GL.GL_TEXTURE0 + i);
-				gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+				gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
 				va_texs[i].rewind();
 				gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, va_texs[i]);
 			}
@@ -443,14 +444,14 @@ public class Mesh {
 
 		gl.glDrawArrays(GL.GL_TRIANGLES, 0, coords.size());
 
-		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL.GL_COLOR_ARRAY);
-		gl.glDisableClientState(GL.GL_NORMAL_ARRAY);
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
+		gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 
 		if (max_tex_units != 0) {
 			for (int i = 0; i < max_tex_units; i++) {
 				gl.glClientActiveTexture(GL.GL_TEXTURE0 + i);
-				gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+				gl.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
 			}
 		}
 	}
@@ -458,7 +459,7 @@ public class Mesh {
 	/** pushes the modelview matrix, sets the position, renders the mesh and pops the modelview matrix again
 	 * @param position */
 	public void render (Vector position) {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 		gl.glPushMatrix();
 		gl.glTranslated(position.getX(), position.getY(), position.getZ());
 		this.render();
@@ -468,7 +469,7 @@ public class Mesh {
 	/** pushes the modelview matrix, sets the position and rotation, renders the mesh and pops the modelview matrix again
 	 * @param position */
 	public void render (Vector position, Vector axis, float angle) {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 		gl.glPushMatrix();
 		gl.glTranslated(position.getX(), position.getY(), position.getZ());
 		gl.glRotated(angle, axis.getX(), axis.getY(), axis.getZ());
@@ -479,7 +480,7 @@ public class Mesh {
 	/** pushes the modelview matrix, multiplies it with the given matrix, renders the mesh and pops the modelview matrix again
 	 * @param matrix */
 	public void render (Matrix matrix) {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 		gl.glPushMatrix();
 		gl.glMultMatrixf(matrix.toFloatBuffer());
 		this.render();
@@ -488,35 +489,35 @@ public class Mesh {
 
 	/** wrapper around glBegin( GL_TRIANGLES ) */
 	public static void beginTriangles () {
-		GLContext.getCurrent().getGL().glBegin(GL.GL_TRIANGLES);
+		GLContext.getCurrent().getGL().getGL2().glBegin(GL2.GL_TRIANGLES);
 	}
 
 	/** wrapper around glBegin( GL_QUADS ) */
 	public static void beginQuads () {
-		GLContext.getCurrent().getGL().glBegin(GL.GL_QUADS);
+		GLContext.getCurrent().getGL().getGL2().glBegin(GL2.GL_QUADS);
 	}
 
 	/** wrapper around glBegin( GL_LINES ) */
 	public static void beginLines () {
-		GLContext.getCurrent().getGL().glBegin(GL.GL_LINES);
+		GLContext.getCurrent().getGL().getGL2().glBegin(GL2.GL_LINES);
 
 	}
 
 	/** wrapper around glBegin( GL_LINE_STRIP ) */
 	public static void beginLineStrip () {
-		GLContext.getCurrent().getGL().glBegin(GL.GL_LINE_STRIP);
+		GLContext.getCurrent().getGL().getGL2().glBegin(GL2.GL_LINE_STRIP);
 
 	}
 
 	/** wrapper around glEnd() */
 	public static void end () {
-		GLContext.getCurrent().getGL().glEnd();
+		GLContext.getCurrent().getGL().getGL2().glEnd();
 	}
 
 	public void dispose () {
 		GLContext ctx = GLContext.getCurrent();
 		if (ctx == null) return;
-		GL gl = ctx.getGL();
+		GL2 gl = ctx.getGL().getGL2();
 		gl.glDeleteLists(gl_id, 1);
 	}
 
@@ -704,7 +705,7 @@ public class Mesh {
 	 * @param y
 	 * @param z */
 	public static void nori (float x, float y, float z) {
-		GLContext.getCurrent().getGL().glNormal3d(x, y, z);
+		GLContext.getCurrent().getGL().getGL2().glNormal3d(x, y, z);
 	}
 
 	/** wrapper around glMultiTexCoord2fARB
@@ -712,7 +713,7 @@ public class Mesh {
 	 * @param x
 	 * @param y */
 	public static void texi (int unit, float x, float y) {
-		GLContext.getCurrent().getGL().glMultiTexCoord2d(GL.GL_TEXTURE0 + unit, x, y);
+		GLContext.getCurrent().getGL().getGL2().glMultiTexCoord2d(GL.GL_TEXTURE0 + unit, x, y);
 	}
 
 	/** wrapper around glColor4f
@@ -721,7 +722,7 @@ public class Mesh {
 	 * @param b
 	 * @param a */
 	public static void coli (float r, float g, float b, float a) {
-		GLContext.getCurrent().getGL().glColor4d(r, g, b, a);
+		GLContext.getCurrent().getGL().getGL2().glColor4d(r, g, b, a);
 	}
 
 	/** wrapper around glVertex3f
@@ -729,14 +730,14 @@ public class Mesh {
 	 * @param y
 	 * @param z */
 	public static void coordi (float x, float y, float z) {
-		GLContext.getCurrent().getGL().glVertex3d(x, y, z);
+		GLContext.getCurrent().getGL().getGL2().glVertex3d(x, y, z);
 	}
 
 	/** wrapper around glVertex2f
 	 * @param x
 	 * @param y */
 	public static void coordi (float x, float y) {
-		GLContext.getCurrent().getGL().glVertex2d(x, y);
+		GLContext.getCurrent().getGL().getGL2().glVertex2d(x, y);
 	}
 
 	/** wrapper around glVertex3f */
@@ -823,8 +824,8 @@ public class Mesh {
 	 * @param y
 	 * @param width
 	 * @param height */
-	public static void renderRectangle (GL gl, float x, float y, float width, float height) {
-		gl.glBegin(GL.GL_QUADS);
+	public static void renderRectangle (GL2 gl, float x, float y, float width, float height) {
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex2f(x, y);
 		gl.glVertex2f(x + width, y);
 		gl.glVertex2f(x + width, y + height);
@@ -832,8 +833,8 @@ public class Mesh {
 		gl.glEnd();
 	}
 
-	public static void renderRectangleTextured (GL gl, float x, float y, float width, float height) {
-		gl.glBegin(GL.GL_QUADS);
+	public static void renderRectangleTextured (GL2 gl, float x, float y, float width, float height) {
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glTexCoord2f(0, 1);
 		gl.glVertex2f(x, y);
 		gl.glTexCoord2f(1, 1);
@@ -845,8 +846,8 @@ public class Mesh {
 		gl.glEnd();
 	}
 
-	public static void renderLine (GL gl, float x, float y, float x2, float y2) {
-		gl.glBegin(GL.GL_LINES);
+	public static void renderLine (GL2 gl, float x, float y, float x2, float y2) {
+		gl.glBegin(GL2.GL_LINES);
 		gl.glVertex2f(x, y);
 		gl.glVertex2f(x2, y2);
 		gl.glEnd();

@@ -11,7 +11,7 @@
 
 package quantum.gui;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 ;
 

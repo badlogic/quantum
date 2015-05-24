@@ -12,7 +12,8 @@
 package quantum.gui;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 
 public class Slider extends Widget {
 	float value = 0;
@@ -117,7 +118,7 @@ public class Slider extends Widget {
 
 	@Override
 	public void render (GLCanvas canvas) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 		gl.glColor4f(bg_col.getR(), bg_col.getG(), bg_col.getB(), bg_col.getA());
 		renderQuad(pos.x, pos.y, width, height);
 		gl.glColor4f(fg_col.getR(), fg_col.getG(), fg_col.getB(), fg_col.getA());

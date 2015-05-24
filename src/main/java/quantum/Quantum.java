@@ -11,7 +11,6 @@
 
 package quantum;
 
-import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -21,22 +20,22 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import quantum.forms.StartMenu;
 import quantum.gui.Gui;
-import quantum.net.AutoUpdater;
 import quantum.net.Client;
 import quantum.net.Server;
 import quantum.sound.SoundManager;
 import quantum.utils.FileManager;
 import quantum.utils.Log;
 
-import com.sun.opengl.util.Animator;
+import com.jogamp.opengl.util.Animator;
 
 @SuppressWarnings("serial")
 public strictfp class Quantum extends JFrame implements GLEventListener {
@@ -54,8 +53,8 @@ public strictfp class Quantum extends JFrame implements GLEventListener {
 	Animator animator;
 	Config config = new Config();
 
-	public Quantum () {
-		GLCapabilities caps = new GLCapabilities();
+	public Quantum () {		
+		GLCapabilities caps = new GLCapabilities(GLProfile.getDefault());
 		caps.setRedBits(8);
 		caps.setGreenBits(8);
 		caps.setBlueBits(8);
@@ -75,7 +74,7 @@ public strictfp class Quantum extends JFrame implements GLEventListener {
 			Log.println("[Quantum] couldn't 'load icon.png'");
 		}
 
-		getContentPane().add(canvas, BorderLayout.CENTER);
+		add(canvas);
 
 		animator = new Animator(canvas);
 		animator.setRunAsFastAsPossible(true);
@@ -116,12 +115,11 @@ public strictfp class Quantum extends JFrame implements GLEventListener {
 // new ProcessBuilder( "javaw", "-jar", "quantum.jar" ).start();
 // System.exit(0);
 // }
-// }
-
-		final Quantum app = new Quantum();
+// }		
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run () {
+				Quantum app = new Quantum();
 				app.setVisible(true);
 			}
 		});
@@ -220,6 +218,8 @@ public strictfp class Quantum extends JFrame implements GLEventListener {
 
 	public void display (GLAutoDrawable drawable) {
 		synchronized (drawable) {
+			drawable.getGL().glViewport(0,  0, drawable.getWidth(), drawable.getHeight());
+			drawable.getGL().glClearColor(1, 0, 0, 1);
 			drawable.getGL().glClear(GL.GL_COLOR_BUFFER_BIT);
 
 			synchronized (listeners) {
@@ -238,21 +238,26 @@ public strictfp class Quantum extends JFrame implements GLEventListener {
 
 	public void init (GLAutoDrawable drawable) {
 		synchronized (drawable) {
-			gui = new Gui((GLCanvas)drawable);
-			// gui.setDefaultFont( "dat/matchworks.ttf", 16, FontStyle.Plain );
-			menu = new StartMenu(this, gui);
-
-			drawable.getGL().setSwapInterval(-1);
-			drawable.getGL().glEnable(GL.GL_MULTISAMPLE);
+			if(gui == null) {
+				gui = new Gui((GLCanvas)drawable);
+				// gui.setDefaultFont( "dat/matchworks.ttf", 16, FontStyle.Plain );
+				menu = new StartMenu(this, gui);
+				drawable.getGL().setSwapInterval(-1);
+				drawable.getGL().glEnable(GL.GL_MULTISAMPLE);
+			}
 		}
 	}
 
-	public void reshape (GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
-		// TODO Auto-generated method stub
+	public void reshape (GLAutoDrawable drawable, int x, int y, int width, int height) {
 
 	}
 
 	public float getDelay () {
 		return config.getDelay();
+	}
+
+	public void dispose (GLAutoDrawable arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }

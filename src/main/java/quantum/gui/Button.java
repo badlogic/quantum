@@ -13,7 +13,7 @@ package quantum.gui;
 
 import java.awt.event.KeyEvent;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Font;
 

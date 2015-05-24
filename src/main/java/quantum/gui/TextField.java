@@ -11,8 +11,8 @@
 
 package quantum.gui;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Font;
 import quantum.utils.Timer;
@@ -115,7 +115,7 @@ public class TextField extends Widget {
 
 	@Override
 	public void render (GLCanvas canvas) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
 		gui.getGL().glColor4f(bg_col.getR(), bg_col.getG(), bg_col.getB(), bg_col.getA());
 		renderQuad(pos.x, pos.y, width, height);

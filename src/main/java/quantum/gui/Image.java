@@ -16,7 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Texture;
 
@@ -119,13 +120,13 @@ public class Image extends Widget {
 		gui.getGL().glColor4f(bg_col.getR(), bg_col.getG(), bg_col.getB(), bg_col.getA());
 		renderQuad(pos.x, pos.y, width, height);
 
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
 		if (texture != null) {
 			texture.bind(0);
 
 			gl.glColor4f(fg_col.getR(), fg_col.getG(), fg_col.getB(), fg_col.getA());
-			gl.glBegin(GL.GL_QUADS);
+			gl.glBegin(GL2.GL_QUADS);
 			gl.glTexCoord2f(0, 0);
 			gl.glVertex2f(pos.x, pos.y);
 			gl.glTexCoord2f(texture.getImageWidth() / texture.getWidth(), 0);

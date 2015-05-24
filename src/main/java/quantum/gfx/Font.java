@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
 
 /** a simple font class for drawing system fonts as textured quads.
@@ -139,8 +140,8 @@ public class Font {
 	 * @param text text to be rendered with this font */
 	public void renderText (String text) {
 		texture.bind(0);
-		GL gl = GLContext.getCurrent().getGL();
-		gl.glEnable(GL.GL_ALPHA_TEST);
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
+		gl.glEnable(GL2.GL_ALPHA_TEST);
 		gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
 		Mesh.beginQuads();
 		float x = 0;
@@ -163,7 +164,7 @@ public class Font {
 			x += advances.get(c);
 		}
 		Mesh.end();
-		gl.glDisable(GL.GL_ALPHA_TEST);
+		gl.glDisable(GL2.GL_ALPHA_TEST);
 		texture.unbind(0);
 	}
 
@@ -173,7 +174,7 @@ public class Font {
 	 * @param y
 	 * @param text */
 	public void renderText (float x, float y, String text) {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 		gl.glPushMatrix();
 
 		gl.glTranslatef(x, y, 0);

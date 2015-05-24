@@ -20,15 +20,16 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Color;
 import quantum.gfx.Font;
+import quantum.gfx.Font.FontStyle;
 import quantum.gfx.OrthoCamera;
 import quantum.gfx.Renderer;
 import quantum.gfx.Texture;
-import quantum.gfx.Font.FontStyle;
 import quantum.gui.Widget;
 import quantum.math.Matrix;
 import quantum.math.Vector2D;
@@ -76,12 +77,12 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 			}
 
 			tree_button_texture.bind(0);
-			GL gl = GLContext.getCurrent().getGL();
+			GL2 gl = GLContext.getCurrent().getGL().getGL2();
 			if (mouse_over)
 				gl.glColor4f(1, 1, 1, 0);
 			else
 				gl.glColor4f(0.7f, 0.7f, 0.7f, 0);
-			gl.glBegin(GL.GL_QUADS);
+			gl.glBegin(GL2.GL_QUADS);
 			gl.glTexCoord2f(0, 0);
 			gl.glVertex2f(x, y);
 			gl.glTexCoord2f(1, 0);
@@ -155,15 +156,15 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 
 			float x = cam.getWorldToScreenX(pos.x);
 			float y = cam.getWorldToScreenY(pos.y);
-			GL gl = GLContext.getCurrent().getGL();
+			GL2 gl = GLContext.getCurrent().getGL().getGL2();
 			gl.glColor4f(0.7f, 0.7f, 1, 1);
-			gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+			gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 			gl.glBegin(GL.GL_TRIANGLES);
 			gl.glVertex2f(x - dir.y * WIDTH, y + dir.x * WIDTH);
 			gl.glVertex2f(x + dir.y * WIDTH, y - dir.x * WIDTH);
 			gl.glVertex2f(x + dir.x * WIDTH, y + dir.y * WIDTH);
 			gl.glEnd();
-			gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+			gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 
 			units = (int)(total_creatures * (1 - pos.dst(dst.getPosition()) / dist));
 
@@ -293,15 +294,15 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 
 		renderMarks(canvas);
 
-		canvas.getGL().glPopMatrix();
+		canvas.getGL().getGL2().glPopMatrix();
 	}
 
 	private void renderDebugStats () {
 		mat.setToOrtho2D(0, 0, canvas.getWidth(), canvas.getHeight());
-		canvas.getGL().glPushMatrix();
-		canvas.getGL().glLoadMatrixf(mat.toFloatBuffer());
+		canvas.getGL().getGL2().glPushMatrix();
+		canvas.getGL().getGL2().glLoadMatrixf(mat.toFloatBuffer());
 
-		canvas.getGL().glColor3f(1, 1, 1);
+		canvas.getGL().getGL2().glColor3f(1, 1, 1);
 		if (font == null) {
 			try {
 				font = new Font(FileManager.readFile("matchworks.ttf"), 18, FontStyle.Plain);
@@ -340,7 +341,7 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 		float p_x = cam.getWorldToScreenX(selected_planet.getPosition().x + tmp.x);
 		float p_y = cam.getWorldToScreenY(selected_planet.getPosition().y + tmp.y);
 
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
 		if (selected_planet.owner == loop.getClient().getPlayer().getId()) {
 			if (selected_planet.getMoveableCreatures(loop.getClient().getPlayer().getId()) >= Constants.TREE_COST) {
@@ -371,10 +372,10 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 				float a_x = cam.getWorldToScreenX(planet.getPosition().x + tmp.x);
 				float a_y = cam.getWorldToScreenY(planet.getPosition().y + tmp.y);
 
-				GL gl = canvas.getGL();
+				GL2 gl = canvas.getGL().getGL2();
 				gl.glColor3f(1, 1, 1);
 				mark.bind(0);
-				gl.glBegin(GL.GL_QUADS);
+				gl.glBegin(GL2.GL_QUADS);
 				gl.glTexCoord2f(0, 0);
 				gl.glVertex2f(a_x, a_y);
 				gl.glTexCoord2f(1, 0);
@@ -410,9 +411,9 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 		float x = cam.getWorldToScreenX(tmp.x);
 		float y = cam.getWorldToScreenY(tmp.y);
 
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 		gl.glEnable(GL.GL_BLEND);
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 		Color col = renderer.getPlayerColor(source.getOwner());
 		if (col != null)
 			gl.glColor4f(col.getR(), col.getG(), col.getB(), 1);
@@ -430,7 +431,7 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 		}
 		gl.glEnd();
 		gl.glLineWidth(1.5f);
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 		gl.glDisable(GL.GL_BLEND);
 	}
 
@@ -460,7 +461,7 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 	}
 
 	private void renderPlayerStats (GLCanvas canvas) {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 
 		if (loop.getClient().getPlayerList() == null) return;
 
@@ -513,7 +514,7 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 	private void renderPlanetStats (GLCanvas canvas, Planet selected_planet) {
 		if (selected_planet == null) return;
 
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 
 		tmp.set(1, 1).nor().mul(selected_planet.getRadius() * 1.2f);
 

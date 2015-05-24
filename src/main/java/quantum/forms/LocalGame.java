@@ -19,7 +19,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;

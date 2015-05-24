@@ -14,7 +14,7 @@ package quantum.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 public class Container extends Widget {
 	private ArrayList<Widget> widgets = new ArrayList<Widget>();
@@ -120,15 +120,15 @@ public class Container extends Widget {
 	@Override
 	public void render (GLCanvas canvas) {
 		layout();
-		canvas.getGL().glPushMatrix();
-		canvas.getGL().glTranslatef((int)pos.x, (int)(pos.y - height), 0);
+		canvas.getGL().getGL2().glPushMatrix();
+		canvas.getGL().getGL2().glTranslatef((int)pos.x, (int)(pos.y - height), 0);
 		gui.pushTranslation((int)pos.x, (int)(pos.y - height));
 
 		for (Widget widget : widgets)
 			if (widget.isVisible()) widget.render(canvas);
 
 		gui.pushTranslation((int)-pos.x, (int)(-(pos.y - height)));
-		canvas.getGL().glPopMatrix();
+		canvas.getGL().getGL2().glPopMatrix();
 	}
 
 	protected void layout () {

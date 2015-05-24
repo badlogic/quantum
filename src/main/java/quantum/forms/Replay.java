@@ -18,7 +18,7 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.util.zip.GZIPInputStream;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;

@@ -11,7 +11,7 @@
 
 package quantum.forms;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;
@@ -41,7 +41,6 @@ public class LoginMenu implements DisplayListener {
 			VerticalAlignement.TOP);
 		Image image;
 		try {
-			gui.getCanvas().getContext().makeCurrent();
 			image = new Image(gui, FileManager.readFile("quantum.png"));
 			cont2.addWidget(new Spacer(gui, 0, 50));
 			cont2.addWidget(image);

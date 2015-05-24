@@ -16,7 +16,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;
@@ -82,7 +82,6 @@ public class JoinMenu implements DisplayListener {
 			VerticalAlignement.CENTER);
 		Image image;
 		try {
-			gui.getCanvas().getContext().makeCurrent();
 			image = new Image(gui, FileManager.readFile("quantum.png"));
 			cont.addWidget(image, HorizontalAlignement.CENTER);
 			cont.addWidget(new Spacer(gui, 0, 10));

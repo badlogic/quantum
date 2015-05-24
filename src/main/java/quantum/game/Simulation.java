@@ -19,13 +19,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
 
 import quantum.game.commands.ChainCommand;
@@ -283,7 +283,7 @@ public strictfp class Simulation {
 
 	public void renderPaths () {
 		if (delaunay != null) {
-			GL gl = GLContext.getCurrent().getGL();
+			GL2 gl = GLContext.getCurrent().getGL().getGL2();
 			gl.glEnable(GL.GL_BLEND);
 			gl.glColor4f(1, 1, 1, 0.5f);
 			gl.glBegin(GL.GL_LINES);

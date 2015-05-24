@@ -13,7 +13,7 @@ package quantum.gui;
 
 import java.util.ArrayList;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 public class CustomDialog extends ScreenAlignementContainer {
 	ArrayList<Button> buttons = new ArrayList<Button>();

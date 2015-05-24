@@ -17,9 +17,10 @@ import java.awt.event.WindowEvent;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 
 import quantum.game.Bot;
@@ -35,7 +36,7 @@ import quantum.net.messages.PlayerListMessage;
 import quantum.net.messages.ReadyMessage;
 import quantum.net.messages.SimulationMessage;
 
-import com.sun.opengl.util.Animator;
+import com.jogamp.opengl.util.Animator;
 
 public class BasicTest extends JFrame implements GLEventListener {
 	/**
@@ -92,7 +93,7 @@ public class BasicTest extends JFrame implements GLEventListener {
 
 		saver = new GameRecorder(sim_msg, player_msg);
 
-		GLCapabilities caps = new GLCapabilities();
+		GLCapabilities caps = new GLCapabilities(GLProfile.getDefault());
 		caps.setRedBits(8);
 		caps.setGreenBits(8);
 		caps.setBlueBits(8);
@@ -176,5 +177,10 @@ public class BasicTest extends JFrame implements GLEventListener {
 	public void reshape (GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void dispose (GLAutoDrawable paramGLAutoDrawable) {
+		// TODO Auto-generated method stub
+		
 	}
 }

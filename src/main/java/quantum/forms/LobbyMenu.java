@@ -17,7 +17,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;
@@ -113,7 +113,6 @@ public class LobbyMenu implements DisplayListener {
 		cont = new ScreenAlignementContainer(gui, HorizontalAlignement.CENTER, VerticalAlignement.TOP);
 		Image image;
 		try {
-			gui.getCanvas().getContext().makeCurrent();
 			image = new Image(gui, FileManager.readFile("quantum.png"));
 			cont.addWidget(new Spacer(gui, 0, 50));
 			cont.addWidget(image, HorizontalAlignement.CENTER);

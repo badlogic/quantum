@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.nio.FloatBuffer;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /** a simple rgba color class. colors are given in the range [0,1].
  * 
@@ -52,7 +53,7 @@ public class Color implements Serializable {
 		this.a = a;
 	}
 
-	public void enable (GL gl) {
+	public void enable (GL2 gl) {
 		gl.glColor4d(r, g, b, a);
 	}
 

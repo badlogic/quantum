@@ -19,7 +19,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.util.HashMap;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;
@@ -73,7 +73,6 @@ public class MapMenu implements DisplayListener {
 			VerticalAlignement.TOP);
 		Image image;
 		try {
-			gui.getCanvas().getContext().makeCurrent();
 			image = new Image(gui, FileManager.readFile("quantum.png"));
 			cont2.addWidget(new Spacer(gui, 0, 50));
 			cont2.addWidget(image);

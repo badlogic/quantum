@@ -13,7 +13,7 @@ package quantum.gui;
 
 import java.util.LinkedList;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 public class HorizontalBoxContainer extends Container {
 	LinkedList<VerticalAlignement> v_aligns = new LinkedList<VerticalAlignement>();

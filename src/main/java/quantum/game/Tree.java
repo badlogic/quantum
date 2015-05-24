@@ -15,8 +15,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Color;
 import quantum.gfx.Renderer;
@@ -166,7 +167,7 @@ public strictfp class Tree extends GameObject implements AliveGameObject {
 		}
 
 		public void render () {
-			GL gl = GLContext.getCurrent().getGL();
+			GL2 gl = GLContext.getCurrent().getGL().getGL2();
 			gl.glVertex2f(pos.x, pos.y);
 			gl.glVertex2f(pos.x + dir.x * curr_height, pos.y + dir.y * curr_height);
 
@@ -227,17 +228,17 @@ public strictfp class Tree extends GameObject implements AliveGameObject {
 	}
 
 	public void render (GLCanvas canvas, Renderer renderer) {
-		canvas.getGL().glBegin(GL.GL_LINES);
-		canvas.getGL().glColor3f(0.7f * scale, 0.7f * scale, 1 * scale);
+		canvas.getGL().getGL2().glBegin(GL2.GL_LINES);
+		canvas.getGL().getGL2().glColor3f(0.7f * scale, 0.7f * scale, 1 * scale);
 		root.render();
-		canvas.getGL().glEnd();
+		canvas.getGL().getGL2().glEnd();
 	}
 
 	int grow_direction = -1;
 	float halo_size = 0.11f;
 
 	public void renderHalo (GLCanvas canvas, Renderer renderer) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
 		if (renderer.getCamera().getScale() > 1) {
 			float elapsed_seconds = (renderer.getSystemTime() - start_time) / 1000000000.0f;

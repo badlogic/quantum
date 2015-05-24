@@ -13,7 +13,7 @@ package quantum.forms;
 
 import java.io.File;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;
@@ -46,7 +46,6 @@ public class UpdateMenu implements DisplayListener {
 		this.gui = gui;
 		this.quantum = quantum;
 		quantum.addDisplayListener(this);
-		gui.getCanvas().getContext().makeCurrent();
 		cont2 = new ScreenAlignementContainer(gui, HorizontalAlignement.CENTER, VerticalAlignement.TOP);
 		cont3 = new ScreenAlignementContainer(gui, HorizontalAlignement.CENTER, VerticalAlignement.CENTER);
 		Image image;

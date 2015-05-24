@@ -22,16 +22,16 @@ import java.awt.event.MouseWheelListener;
 import java.util.HashSet;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
+import javax.media.opengl.awt.GLCanvas;
 
+import quantum.game.GameInterface;
 import quantum.math.Bounds;
 import quantum.math.Matrix;
 import quantum.math.Ray;
 import quantum.math.Vector;
 import quantum.math.Vector2D;
-
-import quantum.game.GameInterface;
 
 /** a simple ortho camera looking along negative z having a scaling parameter for zooming
  * 
@@ -112,10 +112,10 @@ public class OrthoCamera implements MouseListener, MouseMotionListener, MouseWhe
 		combined.set(proj);
 		combined.mul(model);
 
-		GL gl = GLContext.getCurrent().getGL();
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadMatrixf(combined.toFloatBuffer());
 	}
 
@@ -130,10 +130,10 @@ public class OrthoCamera implements MouseListener, MouseMotionListener, MouseWhe
 		combined.set(proj);
 		combined.mul(model);
 
-		GL gl = canvas.getGL();
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		GL2 gl = canvas.getGL().getGL2();
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadMatrixf(combined.toFloatBuffer());
 	}
 
@@ -231,10 +231,10 @@ public class OrthoCamera implements MouseListener, MouseMotionListener, MouseWhe
 		combined.mul(model);
 
 		if (update_matrices) {
-			GL gl = canvas.getGL();
-			gl.glMatrixMode(GL.GL_PROJECTION);
+			GL2 gl = canvas.getGL().getGL2();
+			gl.glMatrixMode(GL2.GL_PROJECTION);
 			gl.glLoadIdentity();
-			gl.glMatrixMode(GL.GL_MODELVIEW);
+			gl.glMatrixMode(GL2.GL_MODELVIEW);
 			gl.glLoadMatrixf(combined.toFloatBuffer());
 		}
 

@@ -14,7 +14,7 @@ package quantum.game;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.math.Vector2D;
 

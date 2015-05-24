@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
 
 public class Shader {
@@ -51,26 +52,26 @@ public class Shader {
 	}
 
 	protected void create (String vertex_shader, String fragment_shader) throws Exception {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 
 		if (!gl.isExtensionAvailable("GL_ARB_vertex_shader") || !gl.isExtensionAvailable("GL_ARB_fragment_shader"))
 			throw new Exception("glsl: not supported");
 
 		if (vertex_shader != null) {
-			this.vertex_shader = gl.glCreateShaderObjectARB(GL.GL_VERTEX_SHADER);
+			this.vertex_shader = gl.glCreateShaderObjectARB(GL2.GL_VERTEX_SHADER);
 			gl.glShaderSourceARB(this.vertex_shader, 1, new String[] {vertex_shader}, new int[] {vertex_shader.length()}, 0);
 			gl.glCompileShaderARB(this.vertex_shader);
 			int[] status = new int[1];
-			gl.glGetObjectParameterivARB(this.vertex_shader, GL.GL_COMPILE_STATUS, status, 0);
+			gl.glGetObjectParameterivARB(this.vertex_shader, GL2.GL_COMPILE_STATUS, status, 0);
 			if (status[0] != GL.GL_TRUE) throw new Exception("glsl: error in vertex shader, " + getInfoLog(this.vertex_shader));
 		}
 
 		if (fragment_shader != null) {
-			this.fragment_shader = gl.glCreateShaderObjectARB(GL.GL_FRAGMENT_SHADER);
+			this.fragment_shader = gl.glCreateShaderObjectARB(GL2.GL_FRAGMENT_SHADER);
 			gl.glShaderSourceARB(this.fragment_shader, 1, new String[] {fragment_shader}, new int[] {fragment_shader.length()}, 0);
 			gl.glCompileShaderARB(this.fragment_shader);
 			int[] status = new int[1];
-			gl.glGetObjectParameterivARB(this.fragment_shader, GL.GL_COMPILE_STATUS, status, 0);
+			gl.glGetObjectParameterivARB(this.fragment_shader, GL2.GL_COMPILE_STATUS, status, 0);
 			if (status[0] != GL.GL_TRUE) throw new Exception("glsl: error in fragment shader, " + getInfoLog(this.fragment_shader));
 		}
 
@@ -80,16 +81,16 @@ public class Shader {
 
 		gl.glLinkProgramARB(program);
 		int[] status = new int[1];
-		gl.glGetObjectParameterivARB(program, GL.GL_LINK_STATUS, status, 0);
+		gl.glGetObjectParameterivARB(program, GL2.GL_LINK_STATUS, status, 0);
 		if (status[0] != GL.GL_TRUE) throw new Exception("glsl: error linking shader program, " + getInfoLog(this.program));
 	}
 
 	public String getInfoLog (int object) {
 		String text = "";
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 
 		int len[] = new int[1];
-		gl.glGetObjectParameterivARB(object, GL.GL_INFO_LOG_LENGTH, len, 0);
+		gl.glGetObjectParameterivARB(object, GL2.GL_INFO_LOG_LENGTH, len, 0);
 
 		if (len[0] > 0) {
 			byte[] bytes = new byte[len[0]];
@@ -101,15 +102,15 @@ public class Shader {
 	}
 
 	public void bind () {
-		GLContext.getCurrent().getGL().glUseProgramObjectARB(program);
+		GLContext.getCurrent().getGL().getGL2().glUseProgramObjectARB(program);
 	}
 
 	public void unbind () {
-		GLContext.getCurrent().getGL().glUseProgramObjectARB(0);
+		GLContext.getCurrent().getGL().getGL2().glUseProgramObjectARB(0);
 	}
 
 	public void dispose () {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 		if (vertex_shader != -1) {
 			gl.glDetachObjectARB(program, vertex_shader);
 			gl.glDeleteObjectARB(vertex_shader);

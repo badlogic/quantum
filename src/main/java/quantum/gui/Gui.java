@@ -16,13 +16,15 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Color;
 import quantum.gfx.Font;
@@ -45,6 +47,7 @@ public class Gui implements MouseListener, MouseMotionListener, KeyListener {
 	private boolean show_debug_bounds = false;
 	private Vector2D translation = new Vector2D();
 	private ScreenAlignementContainer dialog = null;
+	private java.util.List<Runnable> events = new ArrayList<Runnable>();
 
 	public Gui (GLCanvas canvas) {
 		this.canvas = canvas;
@@ -101,6 +104,13 @@ public class Gui implements MouseListener, MouseMotionListener, KeyListener {
 	}
 
 	public void render () {
+		synchronized (events) {
+			for (Runnable e : events) {
+				e.run();
+			}
+			events.clear();
+		}
+
 		Collections.sort(widgets, new Comparator<Widget>() {
 
 			public int compare (Widget o1, Widget o2) {
@@ -108,7 +118,7 @@ public class Gui implements MouseListener, MouseMotionListener, KeyListener {
 			}
 		});
 
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 		ortho.setToOrtho2D(0, 0, canvas.getWidth(), canvas.getHeight());
 
 		gl.glPushMatrix();
@@ -153,96 +163,118 @@ public class Gui implements MouseListener, MouseMotionListener, KeyListener {
 
 	}
 
-	public void mousePressed (MouseEvent e) {
-		synchronized (canvas) {
-			getCanvas().getContext().makeCurrent();
-			Widget widget = getWidget(e.getX(), e.getY());
+	public void mousePressed (final MouseEvent e) {
+		synchronized (events) {
+			events.add(new Runnable() {
 
-			if (dialog != null && widget != dialog) return;
+				public void run () {
+					Widget widget = getWidget(e.getX(), e.getY());
 
-			if (widget == null) return;
+					if (dialog != null && widget != dialog) return;
 
-			if (widget.isFocusable()) {
-				if (key_focus != null) key_focus.setFocus(false);
-				key_focus = widget;
-				widget.setFocus(true);
-			}
+					if (widget == null) return;
 
-			widget.mousePressed(e.getX() - widget.getPosition().x, canvas.getHeight() - e.getY() - widget.getPosition().y,
-				e.getButton());
-			last_pressed_widget = widget;
+					if (widget.isFocusable()) {
+						if (key_focus != null) key_focus.setFocus(false);
+						key_focus = widget;
+						widget.setFocus(true);
+					}
+
+					widget.mousePressed(e.getX() - widget.getPosition().x, canvas.getHeight() - e.getY() - widget.getPosition().y,
+						e.getButton());
+					last_pressed_widget = widget;
+				}
+			});
 		}
 	}
 
-	public void mouseReleased (MouseEvent e) {
-		synchronized (canvas) {
-			getCanvas().getContext().makeCurrent();
-			if (last_pressed_widget == null) return;
+	public void mouseReleased (final MouseEvent e) {
+		synchronized (events) {
+			events.add(new Runnable() {
+				public void run () {
+					if (last_pressed_widget == null) return;
 
-			last_pressed_widget.mouseReleased(e.getX() - last_pressed_widget.getPosition().x, canvas.getHeight() - e.getY()
-				- last_pressed_widget.getPosition().y, e.getButton());
-			last_pressed_widget = null;
+					last_pressed_widget.mouseReleased(e.getX() - last_pressed_widget.getPosition().x, canvas.getHeight() - e.getY()
+						- last_pressed_widget.getPosition().y, e.getButton());
+					last_pressed_widget = null;
+				}
+			});
 		}
 	}
 
-	public void mouseDragged (MouseEvent e) {
-		synchronized (canvas) {
-			getCanvas().getContext().makeCurrent();
-			if (last_pressed_widget == null) return;
+	public void mouseDragged (final MouseEvent e) {
+		synchronized (events) {
+			events.add(new Runnable() {
+				public void run () {
+					if (last_pressed_widget == null) return;
 
-			last_pressed_widget.mouseDragged(e.getX() - last_pressed_widget.getPosition().x, canvas.getHeight() - e.getY()
-				- last_pressed_widget.getPosition().y, e.getButton());
+					last_pressed_widget.mouseDragged(e.getX() - last_pressed_widget.getPosition().x, canvas.getHeight() - e.getY()
+						- last_pressed_widget.getPosition().y, e.getButton());
+				}
+			});
 		}
 	}
 
-	public void mouseMoved (MouseEvent e) {
-		synchronized (canvas) {
-			getCanvas().getContext().makeCurrent();
-			Widget widget = getWidget(e.getX(), e.getY());
+	public void mouseMoved (final MouseEvent e) {
+		synchronized (events) {
+			events.add(new Runnable() {
+				public void run () {
+					Widget widget = getWidget(e.getX(), e.getY());
 
-			if (dialog != null && widget != dialog) return;
+					if (dialog != null && widget != dialog) return;
 
-			if (last_hovered_widget != widget) {
-				if (last_hovered_widget != null) last_hovered_widget.mouseExited();
-				last_hovered_widget = widget;
-			}
+					if (last_hovered_widget != widget) {
+						if (last_hovered_widget != null) last_hovered_widget.mouseExited();
+						last_hovered_widget = widget;
+					}
 
-			if (widget == null) return;
+					if (widget == null) return;
 
-			widget.mouseMoved(e.getX() - widget.getPosition().x, canvas.getHeight() - e.getY() - widget.getPosition().y);
+					widget.mouseMoved(e.getX() - widget.getPosition().x, canvas.getHeight() - e.getY() - widget.getPosition().y);
+				}
+			});
 		}
 	}
 
-	public void keyPressed (KeyEvent e) {
-		synchronized (canvas) {
-			getCanvas().getContext().makeCurrent();
-			if (dialog != null && key_focus != dialog) return;
+	public void keyPressed (final KeyEvent e) {
+		synchronized (events) {
+			events.add(new Runnable() {
+				public void run () {
+					if (dialog != null && key_focus != dialog) return;
 
-			if (key_focus == null) return;
+					if (key_focus == null) return;
 
-			key_focus.keyPressed(e.getKeyCode());
+					key_focus.keyPressed(e.getKeyCode());
+				}
+			});
 		}
 	}
 
-	public void keyReleased (KeyEvent e) {
-		synchronized (canvas) {
-			getCanvas().getContext().makeCurrent();
-			if (dialog != null && key_focus != dialog) return;
+	public void keyReleased (final KeyEvent e) {
+		synchronized (events) {
+			events.add(new Runnable() {
+				public void run () {
+					if (dialog != null && key_focus != dialog) return;
 
-			if (key_focus == null) return;
+					if (key_focus == null) return;
 
-			key_focus.keyReleased(e.getKeyCode());
+					key_focus.keyReleased(e.getKeyCode());
+				}
+			});
 		}
 	}
 
-	public void keyTyped (KeyEvent e) {
-		synchronized (canvas) {
-			getCanvas().getContext().makeCurrent();
-			if (dialog != null && key_focus != dialog) return;
+	public void keyTyped (final KeyEvent e) {
+		synchronized (events) {
+			events.add(new Runnable() {
+				public void run () {
+					if (dialog != null && key_focus != dialog) return;
 
-			if (key_focus == null) return;
+					if (key_focus == null) return;
 
-			key_focus.keyTyped(e.getKeyChar());
+					key_focus.keyTyped(e.getKeyChar());					
+				}
+			});
 		}
 	}
 
@@ -271,7 +303,6 @@ public class Gui implements MouseListener, MouseMotionListener, KeyListener {
 	}
 
 	public void add (Widget widget) {
-		getCanvas().getContext().makeCurrent();
 		widgets.add(widget);
 		if (key_focus == null) key_focus = widget;
 	}
@@ -280,7 +311,6 @@ public class Gui implements MouseListener, MouseMotionListener, KeyListener {
 		if (widget == null) return;
 
 		synchronized (canvas) {
-			getCanvas().getContext().makeCurrent();
 			widgets.remove(widget);
 			widget.dispose();
 			if (key_focus == widget) {
@@ -294,7 +324,6 @@ public class Gui implements MouseListener, MouseMotionListener, KeyListener {
 
 	public void setDefaultFont (String face, int size, FontStyle style) {
 		synchronized (canvas) {
-			getCanvas().getContext().makeCurrent();
 			if (default_font != null) default_font.dispose();
 			default_font = new Font(face, size, style);
 		}
@@ -343,7 +372,7 @@ public class Gui implements MouseListener, MouseMotionListener, KeyListener {
 
 	}
 
-	public GL getGL () {
-		return canvas.getGL();
+	public GL2 getGL () {
+		return canvas.getGL().getGL2();
 	}
 }

@@ -14,9 +14,10 @@ package quantum.gfx;
 import java.nio.FloatBuffer;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
 
-import com.sun.opengl.util.BufferUtil;
+import com.jogamp.common.nio.Buffers;
 
 public class InterleavedVertexArray {
 	boolean has_tex = false;
@@ -31,50 +32,50 @@ public class InterleavedVertexArray {
 
 	public InterleavedVertexArray (int capacity, int format) {
 		switch (format) {
-		case GL.GL_V2F:
+		case GL2.GL_V2F:
 			coord_size = 2;
 			break;
-		case GL.GL_V3F:
+		case GL2.GL_V3F:
 			coord_size = 3;
 			break;
-		case GL.GL_C3F_V3F:
+		case GL2.GL_C3F_V3F:
 			coord_size = 3;
 			col_size = 3;
 			break;
-		case GL.GL_N3F_V3F:
+		case GL2.GL_N3F_V3F:
 			coord_size = 3;
 			nor_size = 3;
 			break;
-		case GL.GL_C4F_N3F_V3F:
+		case GL2.GL_C4F_N3F_V3F:
 			coord_size = 3;
 			col_size = 4;
 			nor_size = 3;
 			break;
-		case GL.GL_T2F_V3F:
+		case GL2.GL_T2F_V3F:
 			coord_size = 3;
 			tex_size = 2;
 			break;
-		case GL.GL_T4F_V4F:
+		case GL2.GL_T4F_V4F:
 			coord_size = 4;
 			tex_size = 4;
 			break;
-		case GL.GL_T2F_C3F_V3F:
+		case GL2.GL_T2F_C3F_V3F:
 			coord_size = 3;
 			col_size = 3;
 			tex_size = 2;
 			break;
-		case GL.GL_T2F_N3F_V3F:
+		case GL2.GL_T2F_N3F_V3F:
 			coord_size = 3;
 			nor_size = 3;
 			tex_size = 2;
 			break;
-		case GL.GL_T2F_C4F_N3F_V3F:
+		case GL2.GL_T2F_C4F_N3F_V3F:
 			coord_size = 3;
 			nor_size = 3;
 			col_size = 4;
 			tex_size = 2;
 			break;
-		case GL.GL_T4F_C4F_N3F_V4F:
+		case GL2.GL_T4F_C4F_N3F_V4F:
 			coord_size = 4;
 			nor_size = 3;
 			col_size = 4;
@@ -84,14 +85,14 @@ public class InterleavedVertexArray {
 			throw new RuntimeException("unsupported vertex format");
 		}
 
-		buf = BufferUtil.newFloatBuffer((coord_size + col_size + tex_size + nor_size) * capacity);
+		buf = Buffers.newDirectFloatBuffer((coord_size + col_size + tex_size + nor_size) * capacity);
 
 		this.format = format;
 		if (tex_size > 0) has_tex = true;
 	}
 
 	public void render (int shape, int vertices) {
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 
 		buf.rewind();
 		gl.glInterleavedArrays(format, 0, buf);

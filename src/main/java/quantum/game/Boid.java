@@ -15,9 +15,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 
-import quantum.game.Constants;
 import quantum.math.Vector2D;
 
 public strictfp class Boid extends GameObject {
@@ -64,7 +64,7 @@ public strictfp class Boid extends GameObject {
 	}
 
 	public void render (GLCanvas canvas) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 		gl.glColor3f(0, 0.8f, 0);
 		float angle_rad = (float)Math.toRadians(angle);
 		gl.glNormal3f(angle_rad, pos.x, pos.y);

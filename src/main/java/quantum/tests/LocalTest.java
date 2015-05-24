@@ -16,22 +16,24 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 
 import quantum.game.Creature;
 import quantum.game.Planet;
 import quantum.game.Simulation;
 import quantum.gfx.Font;
-import quantum.gfx.Renderer;
 import quantum.gfx.Font.FontStyle;
+import quantum.gfx.Renderer;
 import quantum.math.Matrix;
 import quantum.math.Vector2D;
 
-import com.sun.opengl.util.Animator;
+import com.jogamp.opengl.util.Animator;
 
 public class LocalTest extends JFrame implements GLEventListener {
 	/**
@@ -59,7 +61,7 @@ public class LocalTest extends JFrame implements GLEventListener {
 				planet.spawnCreature();
 		}
 
-		GLCapabilities caps = new GLCapabilities();
+		GLCapabilities caps = new GLCapabilities(GLProfile.getDefault());
 		caps.setRedBits(8);
 		caps.setGreenBits(8);
 		caps.setBlueBits(8);
@@ -101,10 +103,10 @@ public class LocalTest extends JFrame implements GLEventListener {
 		renderer.render(sim, (GLCanvas)arg0);
 
 		ortho.setToOrtho2D(0, 0, arg0.getWidth(), arg0.getHeight());
-		GL gl = arg0.getGL();
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		GL2 gl = arg0.getGL().getGL2();
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadMatrixf(ortho.toFloatBuffer());
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		font.renderTextNewLine(
 			20,
@@ -135,5 +137,10 @@ public class LocalTest extends JFrame implements GLEventListener {
 
 	public static void main (String[] argv) {
 		new LocalTest().setVisible(true);
+	}
+
+	public void dispose (GLAutoDrawable paramGLAutoDrawable) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -12,8 +12,9 @@
 package quantum.gui;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Color;
 import quantum.math.Vector2D;
@@ -136,8 +137,8 @@ public abstract class Widget {
 	public abstract void render (GLCanvas canvas);
 
 	public static void renderQuad (float x, float y, float width, float height) {
-		GL gl = GLContext.getCurrent().getGL();
-		gl.glBegin(GL.GL_QUADS);
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex2f(x, y);
 		gl.glVertex2f(x + width, y);
 		gl.glVertex2f(x + width, y - height);
@@ -146,8 +147,8 @@ public abstract class Widget {
 	}
 
 	public static void renderOutlinedQuad (float x, float y, float width, float height) {
-		GL gl = GLContext.getCurrent().getGL();
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 		gl.glBegin(GL.GL_LINES);
 		gl.glVertex2f(x, y);
 		gl.glVertex2f(x + width, y);
@@ -161,12 +162,12 @@ public abstract class Widget {
 		gl.glVertex2f(x, y);
 
 		gl.glEnd();
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 	}
 
 	public static void renderTexturedQuad (float x, float y, float width, float height) {
-		GL gl = GLContext.getCurrent().getGL();
-		gl.glBegin(GL.GL_QUADS);
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glTexCoord2f(0, 0);
 		gl.glVertex2f(x, y);
 		gl.glTexCoord2f(1, 0);

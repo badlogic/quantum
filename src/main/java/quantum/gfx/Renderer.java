@@ -15,8 +15,9 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.game.Constants;
 import quantum.game.Creature;
@@ -32,7 +33,7 @@ import quantum.utils.FileManager;
 import quantum.utils.Log;
 import quantum.utils.Timer;
 
-import com.sun.opengl.util.Screenshot;
+import com.jogamp.opengl.util.awt.Screenshot;
 
 public class Renderer {
 	FrameBufferObject offscreen_fbo;
@@ -146,11 +147,10 @@ public class Renderer {
 	}
 
 	public BufferedImage takeCenteredScreenShot (GLCanvas canvas, Simulation sim) {
-		canvas.getContext().makeCurrent();
 		OrthoCamera cam = new OrthoCamera(0, 0, 1);
 		centerCamera(cam, 256, 256, sim);
 
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		gl.glDepthMask(false);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
@@ -230,7 +230,7 @@ public class Renderer {
 		planet_timer.pause();
 		creature_timer.start();
 		creature_timer.pause();
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		gl.glDepthMask(false);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
@@ -349,9 +349,9 @@ public class Renderer {
 	}
 
 	public void renderPass (Simulation sim, GameInterface gui, GLCanvas canvas) {
-		canvas.getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+		canvas.getGL().getGL2().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 		culled = 0;
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
 		if (!colors_set) {
 			for (Planet planet : sim.getPlanets()) {
@@ -367,11 +367,11 @@ public class Renderer {
 
 		tree_timer.start();
 
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 		textures.get("smoke1").bind(0);
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE);
-		gl.glBegin(GL.GL_QUADS);
+		gl.glBegin(GL2.GL_QUADS);
 		for (Planet planet : sim.getPlanets()) {
 			for (Tree tree : planet.getTrees()) {
 				tree.setColor(getPlayerColor(planet.getOwner()));
@@ -383,7 +383,7 @@ public class Renderer {
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		textures.get("smoke1").unbind();
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 
 		for (Planet planet : sim.getPlanets()) {
 			for (Tree tree : planet.getTrees()) {
@@ -395,17 +395,17 @@ public class Renderer {
 
 		planet_timer.start();
 		canvas.getGL().glLineWidth(1);
-		canvas.getGL().glBegin(GL.GL_TRIANGLES);
+		canvas.getGL().getGL2().glBegin(GL2.GL_TRIANGLES);
 		for (Planet planet : sim.getPlanets()) {
 			Color col = getPlayerColor(planet.getOwner());
 			if (col != null)
-				canvas.getGL().glColor3f(col.getR(), col.getG(), col.getB());
+				canvas.getGL().getGL2().glColor3f(col.getR(), col.getG(), col.getB());
 			else
-				canvas.getGL().glColor3f(0.7f, 0.7f, 1);
+				canvas.getGL().getGL2().glColor3f(0.7f, 0.7f, 1);
 
 			planet.renderCreature(canvas, this);
 		}
-		canvas.getGL().glEnd();
+		canvas.getGL().getGL2().glEnd();
 		canvas.getGL().glLineWidth(1.5f);
 		planet_timer.pause();
 
@@ -425,18 +425,18 @@ public class Renderer {
 			creature_timer.start();
 			if (instancing) {
 				if (cam.getScale() > 12) {
-					canvas.getGL().glPointSize(2);
-					canvas.getGL().glBegin(GL.GL_POINTS);
+					canvas.getGL().getGL2().glPointSize(2);
+					canvas.getGL().getGL2().glBegin(GL.GL_POINTS);
 					for (Creature creature : planet.getCreatures()) {
 						creature.setColor(getPlayerColor(creature.getOwner()));
 						creature.render(canvas, true);
 					}
-					canvas.getGL().glEnd();
-					canvas.getGL().glPointSize(1);
+					canvas.getGL().getGL2().glEnd();
+					canvas.getGL().getGL2().glPointSize(1);
 				} else {
 					instance_shader.bind();
 
-					canvas.getGL().glBegin(GL.GL_TRIANGLES);
+					canvas.getGL().getGL2().glBegin(GL.GL_TRIANGLES);
 					for (Creature creature : planet.getCreatures()) {
 						if (cam.visible(creature.getPosition(), Constants.BOID_SIZE)) {
 							creature.setColor(getPlayerColor(creature.getOwner()));
@@ -444,19 +444,19 @@ public class Renderer {
 						} else
 							culled++;
 					}
-					canvas.getGL().glEnd();
+					canvas.getGL().getGL2().glEnd();
 
 					instance_shader.unbind();
 				}
 			} else {
 				if (cam.getScale() > 6) {
-					canvas.getGL().glPointSize(2);
-					canvas.getGL().glBegin(GL.GL_POINTS);
+					canvas.getGL().getGL2().glPointSize(2);
+					canvas.getGL().getGL2().glBegin(GL.GL_POINTS);
 					for (Creature creature : planet.getCreatures()) {
 						creature.setColor(getPlayerColor(creature.getOwner()));
 						creature.render(canvas, true);
 					}
-					canvas.getGL().glEnd();
+					canvas.getGL().getGL2().glEnd();
 				} else {
 					for (Creature creature : planet.getCreatures()) {
 						if (cam.visible(creature.getPosition(), Constants.BOID_SIZE)) {
@@ -464,10 +464,10 @@ public class Renderer {
 							gl.glTranslatef(creature.getPosition().x, creature.getPosition().y, 0);
 							gl.glRotatef(creature.getAngle(), 0, 0, 1);
 							gl.glScalef(creature.getScale(), creature.getScale(), 0);
-							canvas.getGL().glBegin(GL.GL_TRIANGLES);
+							canvas.getGL().getGL2().glBegin(GL.GL_TRIANGLES);
 							creature.setColor(getPlayerColor(creature.getOwner()));
 							creature.render(canvas, false);
-							canvas.getGL().glEnd();
+							canvas.getGL().getGL2().glEnd();
 							gl.glPopMatrix();
 						} else
 							culled++;
@@ -477,7 +477,7 @@ public class Renderer {
 			canvas.getGL().glDisable(GL.GL_BLEND);
 			creature_timer.pause();
 		}
-		canvas.getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+		canvas.getGL().getGL2().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 
 		canvas.getGL().glLineWidth(1);
 
@@ -534,7 +534,7 @@ public class Renderer {
 	public void renderPlanetPaths (GLCanvas canvas, Simulation sim, Planet planet) {
 		if (planet == null) return;
 
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBegin(GL.GL_LINES);
@@ -555,11 +555,11 @@ public class Renderer {
 	public void renderPlanetPathsLight (GLCanvas canvas, Simulation sim, Planet planet) {
 		if (planet == null) return;
 
-		GL gl = GLContext.getCurrent().getGL();
+		GL2 gl = GLContext.getCurrent().getGL().getGL2();
 
-		gl.glEnable(GL.GL_BLEND);
+		gl.glEnable(GL2.GL_BLEND);
 		gl.glLineWidth(1);
-		gl.glBegin(GL.GL_LINES);
+		gl.glBegin(GL2.GL_LINES);
 		gl.glColor4f(0.1f, 0.1f, 0.1f, 1);
 		for (int id : planet.getReachablePlanets()) {
 			Planet p = sim.getPlanet(id);

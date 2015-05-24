@@ -13,7 +13,7 @@ package quantum.gui;
 
 import java.util.ArrayList;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Font;
 
@@ -194,7 +194,7 @@ public class Label extends Widget {
 		gui.getGL().glColor4f(border_col.getR(), border_col.getG(), border_col.getB(), border_col.getA());
 		renderOutlinedQuad(pos.x - 2, pos.y + 2, width + 2, height + 2);
 
-		canvas.getGL().glColor4f(fg_col.getR(), fg_col.getG(), fg_col.getB(), fg_col.getA());
+		canvas.getGL().getGL2().glColor4f(fg_col.getR(), fg_col.getG(), fg_col.getB(), fg_col.getA());
 		for (int i = 0; i < lines.size(); i++)
 			font.renderText((int)pos.x, (int)(pos.y - i * font.getHeight() + font.getDescent()), lines.get(i));
 	}

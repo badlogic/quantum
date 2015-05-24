@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.Quantum;
 import quantum.Quantum.DisplayListener;
@@ -534,7 +535,7 @@ public class NetworkedGame implements DisplayListener, KeyListener {
 			}
 		}
 
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
 		ortho_mat.setToOrtho2D(0, 0, canvas.getWidth(), canvas.getHeight());
 		gl.glLoadMatrixf(ortho_mat.toFloatBuffer());

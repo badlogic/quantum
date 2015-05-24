@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
-import javax.media.opengl.GLContext;
+import javax.media.opengl.GL2;
+import javax.media.opengl.awt.GLCanvas;
 
 import quantum.gfx.Renderer;
 import quantum.math.Vector2D;
@@ -393,7 +393,7 @@ public strictfp class Planet extends GameObject {
 	}
 
 	public void renderMesh (GLCanvas canvas, float scale, float r, float g, float b) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
 		gl.glColor3f(r, g, b);
 		gl.glPushMatrix();
@@ -411,7 +411,7 @@ public strictfp class Planet extends GameObject {
 	}
 
 	public void render (GLCanvas canvas, Renderer renderer) {
-		GL gl = canvas.getGL();
+		GL2 gl = canvas.getGL().getGL2();
 
 		gl.glColor3f(0.7f, 0.7f, 1);
 		gl.glPushMatrix();
@@ -429,7 +429,7 @@ public strictfp class Planet extends GameObject {
 
 	public void renderCreature (GLCanvas canvas, Renderer renderer) {
 		for (int i = 0; i < 18; i += 2)
-			canvas.getGL().glVertex2f(creature_points[i + 1] * (Constants.PLANET_MIN_SIZE - 10) + pos.x,
+			canvas.getGL().getGL2().glVertex2f(creature_points[i + 1] * (Constants.PLANET_MIN_SIZE - 10) + pos.x,
 				creature_points[i] * (Constants.PLANET_MIN_SIZE - 10) + pos.y);
 	}
 

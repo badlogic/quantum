@@ -6,6 +6,12 @@
 		<format>zip</format>
 	</formats>
 	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+	    <fileSet>
+	        <directory>dat/</directory>
+	        <outputDirectory>quantum/dat/</outputDirectory>
+	    </fileSet>
+	</fileSets>
 	<dependencySets>
 		<dependencySet>
 			<useProjectArtifact>true</useProjectArtifact>
@@ -17,16 +23,17 @@
 			<includes>
 				<include>com.badlogicgames:quantum</include>
 			</includes>
+			<outputDirectory>quantum</outputDirectory>
 		</dependencySet>
 
-		<dependencySet>
+		<dependencySet>		    
 			<useProjectArtifact>false</useProjectArtifact>
 			<useTransitiveDependencies>true</useTransitiveDependencies>
 			<unpack>false</unpack>
 			<scope>runtime</scope>
 			<fileMode>0644</fileMode>
 			<directoryMode>0755</directoryMode>
-			<outputDirectory>lib</outputDirectory>
+			<outputDirectory>quantum/lib</outputDirectory>
 			<includes></includes>
 		</dependencySet>
 	</dependencySets>

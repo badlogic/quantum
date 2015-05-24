@@ -4,7 +4,7 @@
 	<id>distribution</id>
 	<formats>
 		<format>zip</format>
-	</formats>
+	</formats>	
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<fileSets>
 	    <fileSet>
@@ -13,7 +13,7 @@
 	    </fileSet>
 	</fileSets>
 	<dependencySets>
-		<dependencySet>
+		<dependencySet>		    
 			<useProjectArtifact>true</useProjectArtifact>
 			<useTransitiveDependencies>true</useTransitiveDependencies>
 			<unpack>false</unpack>
@@ -23,6 +23,7 @@
 			<includes>
 				<include>com.badlogicgames:quantum</include>
 			</includes>
+			<outputFileNameMapping>${artifactId}.jar</outputFileNameMapping>
 			<outputDirectory>quantum</outputDirectory>
 		</dependencySet>
 

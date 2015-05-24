@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -61,6 +62,8 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 	Timer hover_timer = new Timer();
 	Planet last_hovered = null;
 	float delay = 0.20f;
+	
+	List<Runnable> events = new ArrayList<Runnable>();
 
 	class Button {
 		float x, y;
@@ -275,6 +278,13 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 				canvas.addMouseMotionListener(this);
 				listener_installed = true;
 			}
+		}
+		
+		synchronized(events) {
+			for(Runnable e: events) {
+				e.run();
+			}
+			events.clear();
 		}
 
 		createTextures();
@@ -623,87 +633,111 @@ public strictfp class GameInterface implements MouseListener, MouseMotionListene
 
 	}
 
-	public void mousePressed (MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			if (loop.game_over) {
-				game_over_accepted = true;
-				canvas.removeKeyListener(this);
-				canvas.removeMouseListener(this);
-				canvas.removeMouseMotionListener(this);
-				listener_installed = false;
-			}
+	public void mousePressed (final MouseEvent e) {
+		synchronized(events) {
+			events.add(new Runnable() {
+				public void run () {
+					if (e.getButton() == MouseEvent.BUTTON1) {
+						if (loop.game_over) {
+							game_over_accepted = true;
+							canvas.removeKeyListener(GameInterface.this);
+							canvas.removeMouseListener(GameInterface.this);
+							canvas.removeMouseMotionListener(GameInterface.this);
+							listener_installed = false;
+						}
 
-			if (tree_button != null && tree_button.intersect(e.getX(), e.getY()) && !is_replay) {
-				if (selected_planet != null
-					&& selected_planet.getMoveableCreatures(loop.getClient().getPlayer().getId()) >= Constants.TREE_COST) {
-					SoundManager.playBuffer("tree");
-					sim.plantTree(loop.getClient().getPlayer().getId(), selected_planet.getId());
-				}
-			} else {
-				selected_handle = getIntersectedHandle(e.getX(), e.getY());
-				if (selected_handle != null)
-					selected_handle.setDragged();
-				else {
-					selected_planet = sim.getPlanet(cam.getScreenToWorldX(e.getX()), cam.getScreenToWorldY(e.getY()));
-					move_handles.clear();
-					renderer.setSelectedPlanet(selected_planet);
+						if (tree_button != null && tree_button.intersect(e.getX(), e.getY()) && !is_replay) {
+							if (selected_planet != null
+								&& selected_planet.getMoveableCreatures(loop.getClient().getPlayer().getId()) >= Constants.TREE_COST) {
+								SoundManager.playBuffer("tree");
+								sim.plantTree(loop.getClient().getPlayer().getId(), selected_planet.getId());
+							}
+						} else {
+							selected_handle = getIntersectedHandle(e.getX(), e.getY());
+							if (selected_handle != null)
+								selected_handle.setDragged();
+							else {
+								selected_planet = sim.getPlanet(cam.getScreenToWorldX(e.getX()), cam.getScreenToWorldY(e.getY()));
+								move_handles.clear();
+								renderer.setSelectedPlanet(selected_planet);
 
-					if (selected_planet != null && !is_replay) {
-						for (Integer planet_id : selected_planet.getReachablePlanets())
-							move_handles.add(new Handle(selected_planet, sim.getPlanet(planet_id)));
+								if (selected_planet != null && !is_replay) {
+									for (Integer planet_id : selected_planet.getReachablePlanets())
+										move_handles.add(new Handle(selected_planet, sim.getPlanet(planet_id)));
+								}
+							}
+						}
+					} else if (e.getButton() == MouseEvent.BUTTON2 || e.getButton() == MouseEvent.BUTTON3) {
+						if (selected_planet != null && selected_planet.getOwner() == loop.getClient().getPlayer().getId()) {
+							Planet target = sim.getPlanet(cam.getScreenToWorldX(e.getX()), cam.getScreenToWorldY(e.getY()));
+							if (target != null && target.isReachablePlanet(selected_planet.getId())) {
+								if (target.getChainedPlanet() == selected_planet.getId())
+									sim.chainPlanets(loop.getClient().getPlayer().getId(), target.getId(), -1);
+								sim.chainPlanets(loop.getClient().getPlayer().getId(), selected_planet.getId(), target.getId());
+							}
+
+							if ((target == null || target == selected_planet)
+								&& selected_planet.getOwner() == loop.getClient().getPlayer().getId()) {
+								sim.chainPlanets(loop.getClient().getPlayer().getId(), selected_planet.getId(), -1);
+							}
+						}
 					}
 				}
-			}
-		} else if (e.getButton() == MouseEvent.BUTTON2 || e.getButton() == MouseEvent.BUTTON3) {
-			if (selected_planet != null && selected_planet.getOwner() == loop.getClient().getPlayer().getId()) {
-				Planet target = sim.getPlanet(cam.getScreenToWorldX(e.getX()), cam.getScreenToWorldY(e.getY()));
-				if (target != null && target.isReachablePlanet(selected_planet.getId())) {
-					if (target.getChainedPlanet() == selected_planet.getId())
-						sim.chainPlanets(loop.getClient().getPlayer().getId(), target.getId(), -1);
-					sim.chainPlanets(loop.getClient().getPlayer().getId(), selected_planet.getId(), target.getId());
+			});
+		}		
+	}
+
+	public void mouseReleased (final MouseEvent e) {
+		synchronized(events) {
+			events.add(new Runnable() {
+				public void run () {
+					if (selected_handle != null) {
+						selected_handle.reset();
+
+						if (selected_handle.units != 0) {
+							SoundManager.playBuffer("move");
+							sim.moveCreatures(loop.getClient().getPlayer().getId(), selected_handle.src.getId(), selected_handle.dst.getId(),
+								selected_handle.units);
+						}
+					}
+					selected_handle = null;
 				}
+			});
+		}
+	}
 
-				if ((target == null || target == selected_planet)
-					&& selected_planet.getOwner() == loop.getClient().getPlayer().getId()) {
-					sim.chainPlanets(loop.getClient().getPlayer().getId(), selected_planet.getId(), -1);
+	public void mouseDragged (final MouseEvent e) {
+		synchronized(events) {
+			events.add(new Runnable() {
+				public void run () {
+					if (selected_handle != null) selected_handle.move(e.getX(), e.getY());
+
+					Planet planet = sim.getPlanet(cam.getScreenToWorldX(e.getX()), cam.getScreenToWorldY(e.getY()));
+					if (planet != last_hovered) {
+						hover_timer.stop();
+						hover_timer.start();
+						last_hovered = planet;
+					}					
 				}
-			}
-		}
+			});
+		}		
 	}
 
-	public void mouseReleased (MouseEvent e) {
-		if (selected_handle != null) {
-			selected_handle.reset();
+	public void mouseMoved (final MouseEvent e) {
+		synchronized(events) {
+			events.add(new Runnable() {				
+				public void run () {
+					if (tree_button != null) tree_button.intersect(e.getX(), e.getY());
 
-			if (selected_handle.units != 0) {
-				SoundManager.playBuffer("move");
-				sim.moveCreatures(loop.getClient().getPlayer().getId(), selected_handle.src.getId(), selected_handle.dst.getId(),
-					selected_handle.units);
-			}
-		}
-		selected_handle = null;
-	}
-
-	public void mouseDragged (MouseEvent e) {
-		if (selected_handle != null) selected_handle.move(e.getX(), e.getY());
-
-		Planet planet = sim.getPlanet(cam.getScreenToWorldX(e.getX()), cam.getScreenToWorldY(e.getY()));
-		if (planet != last_hovered) {
-			hover_timer.stop();
-			hover_timer.start();
-			last_hovered = planet;
-		}
-	}
-
-	public void mouseMoved (MouseEvent e) {
-		if (tree_button != null) tree_button.intersect(e.getX(), e.getY());
-
-		Planet planet = sim.getPlanet(cam.getScreenToWorldX(e.getX()), cam.getScreenToWorldY(e.getY()));
-		if (planet != last_hovered) {
-			hover_timer.stop();
-			hover_timer.start();
-			last_hovered = planet;
-		}
+					Planet planet = sim.getPlanet(cam.getScreenToWorldX(e.getX()), cam.getScreenToWorldY(e.getY()));
+					if (planet != last_hovered) {
+						hover_timer.stop();
+						hover_timer.start();
+						last_hovered = planet;
+					}					
+				}		
+			});
+		}		
 	}
 
 	public void setSimulation (Simulation sim) {

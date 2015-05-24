@@ -219,7 +219,7 @@ public strictfp class Quantum extends JFrame implements GLEventListener {
 	public void display (GLAutoDrawable drawable) {
 		synchronized (drawable) {
 			drawable.getGL().glViewport(0,  0, drawable.getWidth(), drawable.getHeight());
-			drawable.getGL().glClearColor(1, 0, 0, 1);
+			drawable.getGL().glClearColor(0, 0, 0, 1);
 			drawable.getGL().glClear(GL.GL_COLOR_BUFFER_BIT);
 
 			synchronized (listeners) {

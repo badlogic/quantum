@@ -11,7 +11,8 @@ The game was originally inspired by Dyson/Eufloria. I got in contact with the au
 That being said, you may still find it interesting as it has the following features:
 
 * Sccriptable bots using BeanShell. See [dat/scripts/simplebot.bsh](dat/scripts/simplebot.bsh) which contains all of the AI code :)
-* Multiplayer using variable lock-step simulation. Works very well, even on high-latency networks
+* Multiplayer using variable lock-step simulation. Works very well, even on high-latency networks.
+* A level editor.
 * Terrible rendering engine, do not imitate this!
 
 ## Building

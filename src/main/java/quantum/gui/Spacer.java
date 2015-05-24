@@ -8,103 +8,97 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.gui;
 
 import javax.media.opengl.GLCanvas;
 
-
-public class Spacer extends Widget
-{
+public class Spacer extends Widget {
 	boolean render = false;
-	
-	public Spacer(Gui gui, float width, float height ) 
-	{
+
+	public Spacer (Gui gui, float width, float height) {
 		super(gui);
-		setWidth( width );
-		setHeight( height );
-		setForegroundColor( 0, 0, 0, 0 );
-		setBackgroundColor( 0, 0, 0, 0 );
-		setBorderColor( 0, 0, 0, 0 );
+		setWidth(width);
+		setHeight(height);
+		setForegroundColor(0, 0, 0, 0);
+		setBackgroundColor(0, 0, 0, 0);
+		setBorderColor(0, 0, 0, 0);
 	}
 
-	public void setRender( boolean render )
-	{
+	public void setRender (boolean render) {
 		this.render = render;
 	}
 
-	public boolean isRendering( )
-	{
+	public boolean isRendering () {
 		return render;
 	}
-	
+
 	@Override
-	public boolean isFocusable() 
-	{	
+	public boolean isFocusable () {
 		return false;
 	}
 
 	@Override
-	public void keyPressed(int key_code) {
+	public void keyPressed (int key_code) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void keyReleased(int key_code) {
+	public void keyReleased (int key_code) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void keyTyped(char character) {
+	public void keyTyped (char character) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void mouseDragged(float x, float y, int button) {
+	public void mouseDragged (float x, float y, int button) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void mouseExited() {
+	public void mouseExited () {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void mouseMoved(float x, float y) {
+	public void mouseMoved (float x, float y) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void mousePressed(float x, float y, int button) {
+	public void mousePressed (float x, float y, int button) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void mouseReleased(float x, float y, int button) {
+	public void mouseReleased (float x, float y, int button) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void render(GLCanvas canvas) 
-	{				
-		gui.getGL().glColor4f( bg_col.getR(), bg_col.getG(), bg_col.getB(), bg_col.getA() );
-		renderQuad(pos.x, pos.y, width, height);	
-		
-		gui.getGL().glColor4f( border_col.getR(), border_col.getG(), border_col.getB(), border_col.getA() );
-		renderOutlinedQuad( pos.x, pos.y, width, height );		
+	public void render (GLCanvas canvas) {
+		gui.getGL().glColor4f(bg_col.getR(), bg_col.getG(), bg_col.getB(), bg_col.getA());
+		renderQuad(pos.x, pos.y, width, height);
+
+		gui.getGL().glColor4f(border_col.getR(), border_col.getG(), border_col.getB(), border_col.getA());
+		renderOutlinedQuad(pos.x, pos.y, width, height);
 	}
 
 	@Override
-	public void dispose() {
+	public void dispose () {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -8,6 +8,7 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.net.messages;
 
 import java.io.DataInputStream;
@@ -15,46 +16,39 @@ import java.io.DataOutputStream;
 
 import quantum.game.Simulation;
 
-public strictfp class SimulationMessage extends Message 
-{
+public strictfp class SimulationMessage extends Message {
 	int id = 0;
-	Simulation sim = new Simulation( false );
-	
-	public SimulationMessage( )
-	{
-		super( MessageTypes.SIMULATION );
+	Simulation sim = new Simulation(false);
+
+	public SimulationMessage () {
+		super(MessageTypes.SIMULATION);
 	}
-	
-	public SimulationMessage( int id, Simulation sim )
-	{
-		super( MessageTypes.SIMULATION );
+
+	public SimulationMessage (int id, Simulation sim) {
+		super(MessageTypes.SIMULATION);
 		this.id = id;
 		this.sim = sim;
 	}
 
-	public int getId( )
-	{
+	public int getId () {
 		return id;
 	}
-	
-	public Simulation getSimulation( )
-	{
+
+	public Simulation getSimulation () {
 		return sim;
-	}
-	
-	@Override
-	public void read(DataInputStream in) throws Exception 
-	{
-		id = in.readShort();
-		sim.readState( in );
 	}
 
 	@Override
-	public void write(DataOutputStream out) throws Exception 
-	{
-		out.writeInt( type );
-		out.writeShort( id );
-		sim.writeState( out );
+	public void read (DataInputStream in) throws Exception {
+		id = in.readShort();
+		sim.readState(in);
+	}
+
+	@Override
+	public void write (DataOutputStream out) throws Exception {
+		out.writeInt(type);
+		out.writeShort(id);
+		sim.writeState(out);
 		out.flush();
 	}
 }

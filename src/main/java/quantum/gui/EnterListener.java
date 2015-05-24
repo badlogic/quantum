@@ -8,9 +8,9 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.gui;
 
-public interface EnterListener 
-{
-	public void pressedEnter( Widget widget );	
+public interface EnterListener {
+	public void pressedEnter (Widget widget);
 }

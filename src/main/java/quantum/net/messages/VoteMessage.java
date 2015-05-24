@@ -8,60 +8,53 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.net.messages;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-public strictfp class VoteMessage extends Message
-{
+public strictfp class VoteMessage extends Message {
 	int id;
 	String user;
 	String name;
-	
-	public VoteMessage() 
-	{
+
+	public VoteMessage () {
 		super(MessageTypes.VOTE);
 	}
-	
-	public VoteMessage( int id, String user, String name )
-	{
+
+	public VoteMessage (int id, String user, String name) {
 		super(MessageTypes.VOTE);
 		this.id = id;
 		this.user = user;
 		this.name = name;
 	}
-	
-	public int getId( )
-	{
+
+	public int getId () {
 		return id;
 	}
-	
-	public String getUser( )
-	{
+
+	public String getUser () {
 		return user;
 	}
-	
-	public String getName( )
-	{
+
+	public String getName () {
 		return name;
 	}
 
 	@Override
-	public void read(DataInputStream in) throws Exception 
-	{	
-		id = in.readShort( );
-		user = readString( in );
-		name = readString( in );
+	public void read (DataInputStream in) throws Exception {
+		id = in.readShort();
+		user = readString(in);
+		name = readString(in);
 	}
 
 	@Override
-	public void write(DataOutputStream out) throws Exception 
-	{	
-		out.writeInt( type );
-		out.writeShort( id );
-		writeString( out, user );
-		writeString( out, name );
+	public void write (DataOutputStream out) throws Exception {
+		out.writeInt(type);
+		out.writeShort(id);
+		writeString(out, user);
+		writeString(out, name);
 	}
 
 }

@@ -8,36 +8,31 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.game;
 
-public class Player 
-{
+public class Player {
 	String name;
 	int id;
-	
-	public Player( String name, int id )
-	{
+
+	public Player (String name, int id) {
 		this.name = name;
 		this.id = id;
 	}
-	
-	public String getName( )
-	{
+
+	public String getName () {
 		return name;
 	}
-	
-	public int getId( )
-	{
+
+	public int getId () {
 		return id;
 	}
-	
-	public void setId( int id )
-	{
+
+	public void setId (int id) {
 		this.id = id;
 	}
-	
-	public String toString( )
-	{
+
+	public String toString () {
 		return name;
 	}
 }

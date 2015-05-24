@@ -8,9 +8,9 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.gui;
 
-public interface SelectedListener 
-{
-	public void selected( Widget widget, Object selection );
+public interface SelectedListener {
+	public void selected (Widget widget, Object selection);
 }

@@ -8,6 +8,7 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.forms;
 
 import java.io.DataInputStream;
@@ -41,127 +42,112 @@ import quantum.net.messages.SimulationMessage;
 import quantum.utils.FileManager;
 import quantum.utils.Log;
 
-public class Replay implements DisplayListener
-{	
+public class Replay implements DisplayListener {
 	private Simulation sim;
 	private GameLoop loop;
 	private Replay self = this;
-	
-	public Replay( final Quantum quantum, final Gui gui )
-	{
-		quantum.addDisplayListener( this );
-		VerticalBoxContainer v_box = new VerticalBoxContainer( gui );
-		Button load = new Button( gui, "Load" );
-		Button back = new Button( gui, "Back" );
-		load.setSize( 75, 25 );
-		back.setSize( 75, 25 );		
-		
-		String[] files = FileManager.newFile( "dat/recordings/" ).list( new FilenameFilter() 
-		{
-			public boolean accept(File dir, String name) {
-				return name.endsWith( ".rec" );
-			}			
-		});
-		
-		final List replays = new List( gui );
-		replays.setBackgroundColor( 0, 0, 0, 1 );
-		replays.setSize( 250, 120 );
-		for( String file: files )
-			replays.addItem( file );
-		
-		if( files.length > 0 )
-			replays.setSelectedItem( 0 );
-		v_box.addWidget( replays );				
-		
-		final CustomDialog dialog = new CustomDialog( gui, 250, "Load Replay File", v_box, load, back );
-		gui.add( dialog );		
-		
-		back.setClickedListener( new ClickedListener( ) {
 
-			public void clicked(Widget widget) {
-				quantum.removeDisplayListener( self );
-				gui.remove( dialog );					
-				new StartMenu( quantum, gui );				
-			}			
-		});		
-		
-		load.setClickedListener( new ClickedListener( ) {
+	public Replay (final Quantum quantum, final Gui gui) {
+		quantum.addDisplayListener(this);
+		VerticalBoxContainer v_box = new VerticalBoxContainer(gui);
+		Button load = new Button(gui, "Load");
+		Button back = new Button(gui, "Back");
+		load.setSize(75, 25);
+		back.setSize(75, 25);
 
-			public void clicked(Widget widget) 
-			{			
-				try
-				{
-					load( FileManager.getPath() + "dat/recordings/" + replays.getSelectedItem().toString() );
-					gui.remove( dialog );		
-					
-					final ScreenAlignementContainer cont = new ScreenAlignementContainer( gui, HorizontalAlignement.RIGHT, VerticalAlignement.TOP );
-					Button back = new Button( gui, "Back" );
-					back.setSize( 75, 25 );
-					cont.addWidget( back );
-					gui.add( cont );
-					
-					back.setClickedListener( new ClickedListener() {
-
-						public void clicked(Widget widget) {
-							gui.remove( cont );
-							quantum.removeDisplayListener( self );
-							loop.dispose();		
-							new StartMenu( quantum, gui );
-						}
-						
-					});
-				}
-				catch( Exception ex )
-				{
-					Log.println( "[Replay] couldn't load replay: " + Log.getStackTrace( ex ) );
-					gui.showConfirmDialog("Couldn't load replay", "Error" );
-				}
-			}			
-		});
-	}	
-	
-	public void load( String file ) throws Exception
-	{
-		Log.println( "[Replay] trying to open '" + file + "'" );
-		DataInputStream in = new DataInputStream( new GZIPInputStream( new FileInputStream( file ) ) );
-		PlayerListMessage player_msg = (PlayerListMessage)MessageDecoder.decode( in );
-		SimulationMessage sim_msg = (SimulationMessage)MessageDecoder.decode( in );
-		Client client = new Client( "Replay" );
-		client.setPlayerList( player_msg );
-		sim = sim_msg.getSimulation();
-		//sim.setLocalInput( true );
-		loop = new GameLoop( client, sim );		
-		
-		try
-		{
-			while( in.available() > 0 )
-			{			
-				CommandBufferMessage msg = (CommandBufferMessage)MessageDecoder.decode(in);						
-				sim.enqueueTurnCommandBufferMessage( msg );
+		String[] files = FileManager.newFile("dat/recordings/").list(new FilenameFilter() {
+			public boolean accept (File dir, String name) {
+				return name.endsWith(".rec");
 			}
-		}
-		catch( EOFException ex )
-		{
-			
-		}
-		in.close();	
+		});
+
+		final List replays = new List(gui);
+		replays.setBackgroundColor(0, 0, 0, 1);
+		replays.setSize(250, 120);
+		for (String file : files)
+			replays.addItem(file);
+
+		if (files.length > 0) replays.setSelectedItem(0);
+		v_box.addWidget(replays);
+
+		final CustomDialog dialog = new CustomDialog(gui, 250, "Load Replay File", v_box, load, back);
+		gui.add(dialog);
+
+		back.setClickedListener(new ClickedListener() {
+
+			public void clicked (Widget widget) {
+				quantum.removeDisplayListener(self);
+				gui.remove(dialog);
+				new StartMenu(quantum, gui);
+			}
+		});
+
+		load.setClickedListener(new ClickedListener() {
+
+			public void clicked (Widget widget) {
+				try {
+					load(FileManager.getPath() + "dat/recordings/" + replays.getSelectedItem().toString());
+					gui.remove(dialog);
+
+					final ScreenAlignementContainer cont = new ScreenAlignementContainer(gui, HorizontalAlignement.RIGHT,
+						VerticalAlignement.TOP);
+					Button back = new Button(gui, "Back");
+					back.setSize(75, 25);
+					cont.addWidget(back);
+					gui.add(cont);
+
+					back.setClickedListener(new ClickedListener() {
+
+						public void clicked (Widget widget) {
+							gui.remove(cont);
+							quantum.removeDisplayListener(self);
+							loop.dispose();
+							new StartMenu(quantum, gui);
+						}
+
+					});
+				} catch (Exception ex) {
+					Log.println("[Replay] couldn't load replay: " + Log.getStackTrace(ex));
+					gui.showConfirmDialog("Couldn't load replay", "Error");
+				}
+			}
+		});
 	}
 
-	public void display(GLCanvas canvas) 
-	{	
-		if( loop != null )
-		{
-			try {			
+	public void load (String file) throws Exception {
+		Log.println("[Replay] trying to open '" + file + "'");
+		DataInputStream in = new DataInputStream(new GZIPInputStream(new FileInputStream(file)));
+		PlayerListMessage player_msg = (PlayerListMessage)MessageDecoder.decode(in);
+		SimulationMessage sim_msg = (SimulationMessage)MessageDecoder.decode(in);
+		Client client = new Client("Replay");
+		client.setPlayerList(player_msg);
+		sim = sim_msg.getSimulation();
+		// sim.setLocalInput( true );
+		loop = new GameLoop(client, sim);
+
+		try {
+			while (in.available() > 0) {
+				CommandBufferMessage msg = (CommandBufferMessage)MessageDecoder.decode(in);
+				sim.enqueueTurnCommandBufferMessage(msg);
+			}
+		} catch (EOFException ex) {
+
+		}
+		in.close();
+	}
+
+	public void display (GLCanvas canvas) {
+		if (loop != null) {
+			try {
 				loop.update((GLCanvas)canvas);
 				loop.render((GLCanvas)canvas);
-				loop.getGameInterface().setIsReplay( true );
-					
-				Thread.sleep( 0 );
-			} catch (InterruptedException e) 
-			{
-				Log.println( "[Replay] couldn't do replay: " + Log.getStackTrace( e ) );
+				loop.getGameInterface().setIsReplay(true);
+
+				Thread.sleep(0);
+			} catch (InterruptedException e) {
+				Log.println("[Replay] couldn't do replay: " + Log.getStackTrace(e));
 				e.printStackTrace();
-			}	
+			}
 		}
 	}
 }

@@ -8,6 +8,7 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.net.messages;
 
 import java.io.DataInputStream;
@@ -15,64 +16,55 @@ import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public strictfp class PlayerListMessage extends Message 
-{
-	List<Integer> ids = new ArrayList<Integer>( );
-	List<String> names = new ArrayList<String>( );
-	
-	public PlayerListMessage( ) 
-	{
+public strictfp class PlayerListMessage extends Message {
+	List<Integer> ids = new ArrayList<Integer>();
+	List<String> names = new ArrayList<String>();
+
+	public PlayerListMessage () {
 		super(MessageTypes.PLAYER_LIST);
 	}
-	
-	public PlayerListMessage( List<Integer> ids, List<String> names )
-	{
+
+	public PlayerListMessage (List<Integer> ids, List<String> names) {
 		super(MessageTypes.PLAYER_LIST);
 		this.ids = ids;
 		this.names = names;
 	}
-	
-	public List<Integer> getIds( )
-	{
+
+	public List<Integer> getIds () {
 		return ids;
 	}
-	
-	public List<String> getNames( )
-	{
+
+	public List<String> getNames () {
 		return names;
 	}
-	
-	public String toString( )
-	{
+
+	public String toString () {
 		String text = "";
-		for( String name: names )
+		for (String name : names)
 			text += name + " ";
 		return text;
 	}
-	
+
 	@Override
-	public void read(DataInputStream in) throws Exception 
-	{	
+	public void read (DataInputStream in) throws Exception {
 		ids.clear();
 		names.clear();
-		
+
 		int n = in.readShort();
-		for( int i = 0; i < n; i++ )
-		{
-			ids.add( (int)in.readShort() );
-			names.add( readString( in ) );
+		for (int i = 0; i < n; i++) {
+			ids.add((int)in.readShort());
+			names.add(readString(in));
 		}
 	}
+
 	@Override
-	public void write(DataOutputStream out) throws Exception 
-	{	
-		out.writeInt( type );
-		out.writeShort( ids.size() );
-		for( int i = 0; i < ids.size(); i++ )
-		{
+	public void write (DataOutputStream out) throws Exception {
+		out.writeInt(type);
+		out.writeShort(ids.size());
+		for (int i = 0; i < ids.size(); i++) {
 			out.writeShort(ids.get(i));
-			writeString( out, names.get(i) );
+			writeString(out, names.get(i));
 		}
 		out.flush();
-	}	
+	}
 }

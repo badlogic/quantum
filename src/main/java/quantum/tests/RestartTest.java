@@ -8,13 +8,13 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.tests;
 
 import java.io.IOException;
 
 public class RestartTest {
-	public static void main( String[] argv ) throws IOException
-	{
+	public static void main (String[] argv) throws IOException {
 		new ProcessBuilder("notepad", "").start();
 		System.exit(0);
 	}

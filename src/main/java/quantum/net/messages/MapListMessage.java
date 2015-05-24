@@ -8,6 +8,7 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.net.messages;
 
 import java.io.DataInputStream;
@@ -15,58 +16,51 @@ import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public strictfp class MapListMessage extends Message
-{
-	ArrayList<String> maps = new ArrayList<String>( );
-	ArrayList<String> names = new ArrayList<String>( );
-	public MapListMessage( ) 
-	{
+public strictfp class MapListMessage extends Message {
+	ArrayList<String> maps = new ArrayList<String>();
+	ArrayList<String> names = new ArrayList<String>();
+
+	public MapListMessage () {
 		super(MessageTypes.MAP_LIST);
-		
+
 	}
-	
-	public MapListMessage( String[] maps, String[] names )
-	{
+
+	public MapListMessage (String[] maps, String[] names) {
 		super(MessageTypes.MAP_LIST);
-		for( int i = 0; i < maps.length; i++ )
-		{
-			this.maps.add( maps[i] );
-			this.names.add( names[i] );
+		for (int i = 0; i < maps.length; i++) {
+			this.maps.add(maps[i]);
+			this.names.add(names[i]);
 		}
 	}
-	
-	public List<String> getMaps( )
-	{
+
+	public List<String> getMaps () {
 		return maps;
-	}	
-	
-	public List<String> getNames( )
-	{
+	}
+
+	public List<String> getNames () {
 		return names;
 	}
 
 	@Override
-	public void read(DataInputStream in) throws Exception 
-	{			
+	public void read (DataInputStream in) throws Exception {
 		String[] files = readString(in).split("\n");
-		for( int i = 0; i < files.length / 2; i++ )
-			maps.add( files[i] );
-		for( int i = files.length / 2; i < files.length; i++ )
-			names.add( files[i] );
+		for (int i = 0; i < files.length / 2; i++)
+			maps.add(files[i]);
+		for (int i = files.length / 2; i < files.length; i++)
+			names.add(files[i]);
 	}
 
 	@Override
-	public void write(DataOutputStream out) throws Exception 
-	{
-		out.writeInt( type );
+	public void write (DataOutputStream out) throws Exception {
+		out.writeInt(type);
 		String files = "";
-		
-		for( String map: maps )
-			files += map + "\n";	
-		
-		for( String name: names )
+
+		for (String map : maps)
+			files += map + "\n";
+
+		for (String name : names)
 			files += name + "\n";
-		
-		writeString( out, files );
+
+		writeString(out, files);
 	}
 }

@@ -8,6 +8,7 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.forms;
 
 import java.awt.event.KeyEvent;
@@ -50,8 +51,7 @@ import quantum.sound.SoundManager;
 import quantum.sound.SoundStream;
 import quantum.utils.Log;
 
-public class LocalGame implements KeyListener, DisplayListener,
-		CommandTurnListener {
+public class LocalGame implements KeyListener, DisplayListener, CommandTurnListener {
 	Quantum quantum;
 	Gui gui;
 	GameLoop loop;
@@ -61,8 +61,7 @@ public class LocalGame implements KeyListener, DisplayListener,
 	CustomDialog game_menu;
 	SoundStream music_stream;
 
-	public LocalGame(final Quantum quantum, final Gui gui, Simulation sim,
-			Client client, List<Bot> bots) {
+	public LocalGame (final Quantum quantum, final Gui gui, Simulation sim, Client client, List<Bot> bots) {
 		music_stream = SoundManager.playStream("sounds/bgsound.ogg");
 		music_stream.setVolume(quantum.getConfig().getVolumeMusic());
 		music_stream.setLooping(true);
@@ -89,7 +88,7 @@ public class LocalGame implements KeyListener, DisplayListener,
 		this.loop = new GameLoop(client, sim);
 	}
 
-	private void populateSimulation(Simulation sim, List<Player> players) {
+	private void populateSimulation (Simulation sim, List<Player> players) {
 		ArrayList<Planet> planets = new ArrayList<Planet>();
 		for (Planet planet : sim.getPlanets())
 			planets.add(planet);
@@ -126,7 +125,7 @@ public class LocalGame implements KeyListener, DisplayListener,
 		}
 	}
 
-	private void showGameOverMenu() {		
+	private void showGameOverMenu () {
 
 		Button save = new Button(gui, "Save Recording");
 		Button back = new Button(gui, "Back");
@@ -136,31 +135,18 @@ public class LocalGame implements KeyListener, DisplayListener,
 
 		CustomDialog dialog = null;
 
-		if (loop.getSimulation().getPlayerStats().get(
-				loop.getClient().getPlayer().getId()) != null)
-			dialog = new CustomDialog(
-					gui,
-					300,
-					"Game Over",
-					new Label(
-							gui,
-							"You have won! You can save the recording of the game for later playback.",
-							300), save, back);
+		if (loop.getSimulation().getPlayerStats().get(loop.getClient().getPlayer().getId()) != null)
+			dialog = new CustomDialog(gui, 300, "Game Over", new Label(gui,
+				"You have won! You can save the recording of the game for later playback.", 300), save, back);
 		else
-			dialog = new CustomDialog(
-					gui,
-					300,
-					"Game Over",
-					new Label(
-							gui,
-							"You have lost! You can save the recording of the game for later playback.",
-							300), save, back);
+			dialog = new CustomDialog(gui, 300, "Game Over", new Label(gui,
+				"You have lost! You can save the recording of the game for later playback.", 300), save, back);
 
 		final CustomDialog ref = dialog;
 
 		save.setClickedListener(new ClickedListener() {
 
-			public void clicked(Widget widget) {
+			public void clicked (Widget widget) {
 				gui.remove(ref);
 				showSaveRecordingDialog(false);
 			}
@@ -169,12 +155,11 @@ public class LocalGame implements KeyListener, DisplayListener,
 
 		back.setClickedListener(new ClickedListener() {
 
-			public void clicked(Widget widget) {
+			public void clicked (Widget widget) {
 				quantum.removeDisplayListener(self);
 				gui.getCanvas().removeKeyListener(self);
 				loop.dispose();
-				if (menu != null)
-					gui.remove(menu);
+				if (menu != null) gui.remove(menu);
 				gui.remove(ref);
 				SoundManager.stopAll();
 				new SinglePlayerMenu(quantum, gui);
@@ -188,7 +173,7 @@ public class LocalGame implements KeyListener, DisplayListener,
 
 	boolean save_menu_visible = false;
 
-	private void showSaveRecordingDialog(final boolean in_game) {
+	private void showSaveRecordingDialog (final boolean in_game) {
 		save_menu_visible = true;
 		VerticalBoxContainer v_box = new VerticalBoxContainer(gui);
 
@@ -203,23 +188,19 @@ public class LocalGame implements KeyListener, DisplayListener,
 
 		final TextField file = new TextField(gui);
 		file.setFocus(true);
-		file.setText("game-"
-				+ new SimpleDateFormat("yyyy-MM-dd-hh-mm").format(Calendar
-						.getInstance().getTime()) + ".rec");
+		file.setText("game-" + new SimpleDateFormat("yyyy-MM-dd-hh-mm").format(Calendar.getInstance().getTime()) + ".rec");
 		file.setSize(200, 25);
 
 		v_box.addWidget(file);
 
-		CustomDialog dialog = new CustomDialog(gui, 300, "Save Game Recording",
-				v_box, save, back);
+		CustomDialog dialog = new CustomDialog(gui, 300, "Save Game Recording", v_box, save, back);
 		final CustomDialog ref = dialog;
 
 		save.setClickedListener(new ClickedListener() {
 
-			public void clicked(Widget widget) {
+			public void clicked (Widget widget) {
 				if (file.getText().equals("")) {
-					gui.showConfirmDialog("Error",
-							"You have to specify the filename!");
+					gui.showConfirmDialog("Error", "You have to specify the filename!");
 					return;
 				}
 
@@ -227,17 +208,12 @@ public class LocalGame implements KeyListener, DisplayListener,
 					try {
 						loop.saveRecording("dat/recordings/" + file.getText());
 					} catch (Exception e) {
-						Log
-								.println("[LocalGame] couldn't save recording to '"
-										+ file.getText()
-										+ "': "
-										+ Log.getStackTrace(e));
+						Log.println("[LocalGame] couldn't save recording to '" + file.getText() + "': " + Log.getStackTrace(e));
 					}
 					quantum.removeDisplayListener(self);
 					gui.getCanvas().removeKeyListener(self);
 					loop.dispose();
-					if (menu != null)
-						gui.remove(menu);
+					if (menu != null) gui.remove(menu);
 					gui.remove(ref);
 					save_menu_visible = false;
 					SoundManager.stopAll();
@@ -246,11 +222,7 @@ public class LocalGame implements KeyListener, DisplayListener,
 					try {
 						loop.saveRecording("dat/recordings/" + file.getText());
 					} catch (Exception e) {
-						Log
-								.println("[LocalGame] couldn't save recording to '"
-										+ file.getText()
-										+ "': "
-										+ Log.getStackTrace(e));
+						Log.println("[LocalGame] couldn't save recording to '" + file.getText() + "': " + Log.getStackTrace(e));
 					}
 					gui.remove(ref);
 					save_menu_visible = false;
@@ -263,13 +235,12 @@ public class LocalGame implements KeyListener, DisplayListener,
 
 		back.setClickedListener(new ClickedListener() {
 
-			public void clicked(Widget widget) {
+			public void clicked (Widget widget) {
 				if (!in_game) {
 					quantum.removeDisplayListener(self);
 					gui.getCanvas().removeKeyListener(self);
 					loop.dispose();
-					if (menu != null)
-						gui.remove(menu);
+					if (menu != null) gui.remove(menu);
 					gui.remove(ref);
 					save_menu_visible = false;
 					SoundManager.stopAll();
@@ -289,15 +260,14 @@ public class LocalGame implements KeyListener, DisplayListener,
 
 	boolean game_over_triggered = false;
 
-	public void display(GLCanvas canvas) {
+	public void display (GLCanvas canvas) {
 		Thread.currentThread().setName("Networked Game Thread");
 		if (game_menu == null && save_menu_visible == false) {
 			loop.update(canvas);
 			for (Bot bot : bots)
 				bot.update(loop.getSimulation());
 
-			if (loop.getSimulation().getActivePlayers() == 1
-					&& !game_over_triggered) {
+			if (loop.getSimulation().getActivePlayers() == 1 && !game_over_triggered) {
 				game_over_triggered = true;
 				showGameOverMenu();
 			}
@@ -314,11 +284,11 @@ public class LocalGame implements KeyListener, DisplayListener,
 
 	}
 
-	public void dispose() {
+	public void dispose () {
 
 	}
 
-	public void showMenu() {
+	public void showMenu () {
 		VerticalBoxContainer content = new VerticalBoxContainer(gui);
 
 		Button leave = new Button(gui, "Quit Game");
@@ -337,30 +307,26 @@ public class LocalGame implements KeyListener, DisplayListener,
 		content.addWidget(glow, HorizontalAlignement.CENTER);
 		glow.setClickedListener(new ClickedListener() {
 
-			public void clicked(Widget widget) {
+			public void clicked (Widget widget) {
 				loop.getRenderer().useGlow(glow.isChecked());
 			}
 
 		});
 
-		final Label label = new Label(gui, "Popup Delay ["
-				+ loop.getGameInterface().getHoverDelay() * 1000 + " ms]");
+		final Label label = new Label(gui, "Popup Delay [" + loop.getGameInterface().getHoverDelay() * 1000 + " ms]");
 		content.addWidget(new Spacer(gui, 0, 10));
 		content.addWidget(label, HorizontalAlignement.CENTER);
 
-		final Slider delay = new Slider(gui, 0, 0.25f, loop.getGameInterface()
-				.getHoverDelay());
+		final Slider delay = new Slider(gui, 0, 0.25f, loop.getGameInterface().getHoverDelay());
 		delay.setSize(100, 5);
 		delay.setBackgroundColor(new Color(0.3f, 0.3f, 0.3f, 1));
 		content.addWidget(new Spacer(gui, 0, 10));
 		content.addWidget(delay, HorizontalAlignement.CENTER);
 		delay.setValueChangedListener(new ValueChangedListener() {
 
-			public void valueChanged(Widget widget) {
+			public void valueChanged (Widget widget) {
 				loop.getGameInterface().setHoverDelay(delay.getValue());
-				label.setText("Popup Delay ["
-						+ loop.getGameInterface().getHoverDelay() * 1000
-						+ " ms]");
+				label.setText("Popup Delay [" + loop.getGameInterface().getHoverDelay() * 1000 + " ms]");
 				quantum.setDelay(delay.getValue());
 			}
 		});
@@ -369,15 +335,14 @@ public class LocalGame implements KeyListener, DisplayListener,
 		content.addWidget(new Spacer(gui, 0, 10));
 		content.addWidget(label_music, HorizontalAlignement.CENTER);
 
-		final Slider music = new Slider(gui, 0, 1, quantum.getConfig()
-				.getVolumeMusic());
+		final Slider music = new Slider(gui, 0, 1, quantum.getConfig().getVolumeMusic());
 		music.setSize(100, 5);
 		music.setBackgroundColor(new Color(0.3f, 0.3f, 0.3f, 1));
 		content.addWidget(new Spacer(gui, 0, 10));
 		content.addWidget(music, HorizontalAlignement.CENTER);
 		music.setValueChangedListener(new ValueChangedListener() {
 
-			public void valueChanged(Widget widget) {
+			public void valueChanged (Widget widget) {
 				quantum.getConfig().setVolumeMusic(music.getValue());
 				music_stream.setVolume(music.getValue());
 			}
@@ -387,15 +352,14 @@ public class LocalGame implements KeyListener, DisplayListener,
 		content.addWidget(new Spacer(gui, 0, 10));
 		content.addWidget(label_effect, HorizontalAlignement.CENTER);
 
-		final Slider effect = new Slider(gui, 0, 1, quantum.getConfig()
-				.getVolumeSfx());
+		final Slider effect = new Slider(gui, 0, 1, quantum.getConfig().getVolumeSfx());
 		effect.setSize(100, 5);
 		effect.setBackgroundColor(new Color(0.3f, 0.3f, 0.3f, 1));
 		content.addWidget(new Spacer(gui, 0, 10));
 		content.addWidget(effect, HorizontalAlignement.CENTER);
 		effect.setValueChangedListener(new ValueChangedListener() {
 
-			public void valueChanged(Widget widget) {
+			public void valueChanged (Widget widget) {
 				quantum.getConfig().setVolumeSfx(effect.getValue());
 				SoundManager.setBufferVolume(effect.getValue());
 			}
@@ -405,7 +369,7 @@ public class LocalGame implements KeyListener, DisplayListener,
 		gui.add(game_menu);
 
 		leave.setClickedListener(new ClickedListener() {
-			public void clicked(Widget widget) {
+			public void clicked (Widget widget) {
 				quantum.removeDisplayListener(self);
 				gui.getCanvas().removeKeyListener(self);
 				loop.dispose();
@@ -417,7 +381,7 @@ public class LocalGame implements KeyListener, DisplayListener,
 		});
 
 		save.setClickedListener(new ClickedListener() {
-			public void clicked(Widget widget) {
+			public void clicked (Widget widget) {
 				hideMenu();
 				showSaveRecordingDialog(true);
 			}
@@ -425,12 +389,12 @@ public class LocalGame implements KeyListener, DisplayListener,
 
 	}
 
-	public void hideMenu() {
+	public void hideMenu () {
 		gui.remove(game_menu);
 		game_menu = null;
 	}
 
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed (KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !save_menu_visible) {
 			if (game_menu == null)
 				showMenu();
@@ -441,26 +405,26 @@ public class LocalGame implements KeyListener, DisplayListener,
 			// {
 			// menu = new ScreenAlignementContainer( gui,
 			// HorizontalAlignement.CENTER, VerticalAlignement.CENTER );
-			//								
+			//
 			// Button leave_game = new Button( gui, "Quit Game" );
 			// final CheckBox glow = new CheckBox( gui, "Enable Glow" );
-			//				
+			//
 			// leave_game.setSize( 200, 25 );
 			// glow.setSize( 20, 20 );
 			// glow.setChecked( loop.getRenderer().isGlowOn() );
-			//												
+			//
 			// leave_game.setBackgroundColor( 0, 0, 0, 1 );
 			// glow.setBackgroundColor( 0, 0, 0, 1 );
-			//				
+			//
 			// glow.setClickedListener( new ClickedListener( ) {
-			//					
+			//
 			// public void clicked(Widget widget)
 			// {
 			// loop.getRenderer().useGlow( glow.isChecked() );
 			// }
-			//					
+			//
 			// });
-			//				
+			//
 			// leave_game.setClickedListener( new ClickedListener( ) {
 			//
 			// public void clicked(Widget widget)
@@ -472,14 +436,14 @@ public class LocalGame implements KeyListener, DisplayListener,
 			// new SinglePlayerMenu(quantum, gui);
 			// return;
 			// }
-			//					
+			//
 			// });
-			//								
+			//
 			// menu.addWidget( leave_game );
 			// menu.addWidget( new Spacer( gui, 0, 5 ) );
 			// menu.addWidget( glow, HorizontalAlignement.CENTER );
 			// menu.addWidget( new Spacer( gui, 0, 5 ) );
-			//				
+			//
 			// gui.add( menu );
 			// }
 			// else
@@ -490,17 +454,17 @@ public class LocalGame implements KeyListener, DisplayListener,
 		}
 	}
 
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased (KeyEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void keyTyped(KeyEvent e) {
+	public void keyTyped (KeyEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void commandTurn(CommandBufferMessage msg) {
+	public void commandTurn (CommandBufferMessage msg) {
 		// TODO Auto-generated method stub
 
 	}

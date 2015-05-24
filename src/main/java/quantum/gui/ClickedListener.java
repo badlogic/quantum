@@ -8,9 +8,9 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.gui;
 
-public interface ClickedListener
-{
-	public void clicked( Widget widget );		
+public interface ClickedListener {
+	public void clicked (Widget widget);
 }

@@ -8,11 +8,9 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.gui;
 
-public enum HorizontalAlignement 
-{
-	LEFT,
-	CENTER,
-	RIGHT
+public enum HorizontalAlignement {
+	LEFT, CENTER, RIGHT
 }

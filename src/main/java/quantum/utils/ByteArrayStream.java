@@ -8,14 +8,13 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.utils;
 
 import java.io.ByteArrayOutputStream;
 
-public class ByteArrayStream extends ByteArrayOutputStream
-{
-	public byte[] getArray( )
-	{
+public class ByteArrayStream extends ByteArrayOutputStream {
+	public byte[] getArray () {
 		return buf;
 	}
 }

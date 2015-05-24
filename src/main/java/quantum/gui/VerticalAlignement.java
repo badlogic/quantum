@@ -8,11 +8,9 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.gui;
 
-public enum VerticalAlignement 
-{
-	TOP,
-	CENTER,
-	BOTTOM
+public enum VerticalAlignement {
+	TOP, CENTER, BOTTOM
 }

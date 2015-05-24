@@ -8,71 +8,63 @@
 // Contributors:
 //     Mario Zechner - initial API and implementation
 //
+
 package quantum.net.messages;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-public class PlayerMessage extends Message
-{
+public class PlayerMessage extends Message {
 	String name = "";
 	int id = -1;
 	boolean remove = false;
 
-	public PlayerMessage() {
+	public PlayerMessage () {
 		super(MessageTypes.PLAYER);
 	}
 
-	public PlayerMessage( String name )
-	{
+	public PlayerMessage (String name) {
 		super(MessageTypes.PLAYER);
 		this.name = name;
 		this.remove = false;
 	}
-	
-	public PlayerMessage( String name, int id, boolean remove )
-	{
+
+	public PlayerMessage (String name, int id, boolean remove) {
 		super(MessageTypes.PLAYER);
 		this.name = name;
 		this.id = id;
 		this.remove = remove;
 	}
-	
-	public String getName( )
-	{
+
+	public String getName () {
 		return name;
 	}
-	
-	public boolean isRemove( )
-	{
+
+	public boolean isRemove () {
 		return remove;
 	}
-	
-	public int getId( )
-	{
+
+	public int getId () {
 		return id;
 	}
-	
-	public void setId( int id )
-	{
+
+	public void setId (int id) {
 		this.id = id;
 	}
-	
+
 	@Override
-	public void read(DataInputStream in) throws Exception 
-	{
-		name = readString( in );
-		remove = in.readBoolean();		
+	public void read (DataInputStream in) throws Exception {
+		name = readString(in);
+		remove = in.readBoolean();
 		id = in.readShort();
 	}
 
 	@Override
-	public void write(DataOutputStream out) throws Exception 
-	{		
-		out.writeInt( type );
-		writeString( out, name );
-		out.writeBoolean( remove );
-		out.writeShort( id );
+	public void write (DataOutputStream out) throws Exception {
+		out.writeInt(type);
+		writeString(out, name);
+		out.writeBoolean(remove);
+		out.writeShort(id);
 	}
 
 }

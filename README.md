@@ -1,6 +1,6 @@
 Quantum
 =======
-![screenshot](screenshot.png "Game process")
+[[screen.png]]
 
 ### [Download](http://libgdx.badlogicgames.com/downloads/quantum.zip)
 

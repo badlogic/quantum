@@ -1,6 +1,6 @@
 Quantum
 =======
-![scfeenshot](https://github.com/badlogic/quantum/blob/master/img/screen.png)
+![screenshot](https://github.com/badlogic/quantum/blob/master/screen.png)
 
 ### [Download](http://libgdx.badlogicgames.com/downloads/quantum.zip)
 

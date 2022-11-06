@@ -1,6 +1,6 @@
 Quantum
 =======
-![screenshot](https://raw.github.com/yndi/quantum/master/screen.png "Game process")
+![screenshot](screenshot.png "Game process")
 
 ### [Download](http://libgdx.badlogicgames.com/downloads/quantum.zip)
 

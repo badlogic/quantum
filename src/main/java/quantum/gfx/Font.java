@@ -18,9 +18,9 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLContext;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLContext;
 
 /** a simple font class for drawing system fonts as textured quads.
  * 
